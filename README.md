@@ -1,2 +1,2 @@
-# SM
-De Sigaar working on Smart Mobile
+# NoFoodWasted
+De Sigaar working on the new NoFoodWasted application.
