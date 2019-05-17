@@ -3,6 +3,8 @@ import { Text, View, StyleSheet, Button, Platform, StatusBar } from "react-nativ
 import { Permissions, BarCodeScanner } from "expo";
 import PropTypes from "prop-types";
 
+import Colors from "../constants/Colors";
+
 import { Header } from "../components/common";
 
 export default class BarCodeScannerExample extends Component {
@@ -55,6 +57,9 @@ export default class BarCodeScannerExample extends Component {
             onBarCodeScanned={scanned ? undefined : this.handleBarCodeScanned}
             style={StyleSheet.absoluteFillObject}
           />
+          <View style={styles.overlay}>
+            <Text>Overlay</Text>
+          </View>
           {scanned && <Button title={"Tap to Scan Again"} onPress={() => this.setState({ scanned: false })} />}
         </View>
       </>
@@ -64,10 +69,17 @@ export default class BarCodeScannerExample extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "yellow",
     flex: 1,
     flexDirection: "column",
     justifyContent: "flex-end",
     zIndex: -1
+  },
+  overlay: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  overlayText: {
+    backgroundColor: Colors.white
   }
 });
