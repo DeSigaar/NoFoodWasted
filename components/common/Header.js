@@ -9,39 +9,46 @@ import ProductSans from "../../constants/fonts/ProductSans";
 
 export default class Header extends Component {
   static propTypes = {
+    navigation: PropTypes.object.isRequired,
+    title: PropTypes.string.isRequired,
     backButton: PropTypes.bool,
     actionButton: PropTypes.bool,
     actionType: PropTypes.string,
     actionPress: PropTypes.func,
-    title: PropTypes.string.isRequired,
-    navigation: PropTypes.object.isRequired
+    color: PropTypes.string,
+    iconName: PropTypes.string
   };
 
   static defaultProps = {
     backButton: true,
     actionButton: false,
-    actionType: "add"
+    actionType: "add",
+    iconName: "arrow-back",
+    color: Colors.greyTextColor
   };
 
   render() {
-    const { title, navigation, backButton, actionButton, actionType, actionPress } = this.props;
+    const { title, navigation, backButton, actionButton, actionType, actionPress, color, iconName } = this.props;
 
     return (
       <View style={styles.container}>
         {backButton && (
           <View style={styles.side}>
             <TouchableOpacity activeOpacity={0.6} onPress={() => navigation.goBack()}>
-              <MaterialIcons style={styles.icon} name="arrow-back" />
+              <MaterialIcons
+                style={[styles.icon, { color }, iconName === "chevron-left" && { fontSize: 40 }]}
+                name={iconName}
+              />
             </TouchableOpacity>
           </View>
         )}
         <View style={styles.center}>
-          <Text style={styles.title}>{title}</Text>
+          <Text style={[styles.title, { color }]}>{title}</Text>
         </View>
         {actionButton && (
           <View style={styles.side}>
             <TouchableOpacity activeOpacity={0.6} onPress={() => actionPress()}>
-              <MaterialIcons style={styles.icon} name={actionType} />
+              <MaterialIcons style={[styles.icon, { color }]} name={actionType} />
             </TouchableOpacity>
           </View>
         )}
@@ -74,12 +81,10 @@ const styles = StyleSheet.create({
     paddingRight: 20
   },
   icon: {
-    fontSize: 28,
-    color: Colors.greyTextColor
+    fontSize: 28
   },
   title: {
     fontSize: 26,
-    fontFamily: ProductSans.bold,
-    color: Colors.greyTextColor
+    fontFamily: ProductSans.bold
   }
 });
