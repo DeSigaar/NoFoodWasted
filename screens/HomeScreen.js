@@ -22,6 +22,9 @@ export default class HomeScreen extends Component {
           <TouchableOpacity activeOpacity={0.5} onPress={() => navigation.navigate("Barcode")} style={styles.button}>
             <Text style={styles.buttonText}>Barcode</Text>
           </TouchableOpacity>
+          <TouchableOpacity activeOpacity={0.5} onPress={() => navigation.navigate("Vision")} style={styles.button}>
+            <Text style={styles.buttonText}>Vision</Text>
+          </TouchableOpacity>
         </View>
       </>
     );
