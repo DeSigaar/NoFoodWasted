@@ -1,8 +1,8 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, TouchableOpacity } from "react-native";
 import PropTypes from "prop-types";
 
-import { Header } from "../components/common";
+import { Header, Container } from "../components/common";
 
 import ProductSans from "../constants/fonts/ProductSans";
 import Colors from "../constants/Colors";
@@ -18,24 +18,20 @@ export default class HomeScreen extends Component {
     return (
       <>
         <Header navigation={navigation} title="NoFoodWasted" backButton={false} />
-        <View style={styles.container}>
+        <Container>
           <TouchableOpacity activeOpacity={0.5} onPress={() => navigation.navigate("Barcode")} style={styles.button}>
             <Text style={styles.buttonText}>Barcode</Text>
           </TouchableOpacity>
           <TouchableOpacity activeOpacity={0.5} onPress={() => navigation.navigate("Vision")} style={styles.button}>
             <Text style={styles.buttonText}>Vision</Text>
           </TouchableOpacity>
-        </View>
+        </Container>
       </>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  container: {
-    marginTop: 75,
-    padding: 20
-  },
   text: {
     fontFamily: ProductSans.regular
   },

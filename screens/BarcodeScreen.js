@@ -1,8 +1,9 @@
 import React, { Component } from "react";
-import { Text, View, StyleSheet, Button, Platform, StatusBar } from "react-native";
-import { Permissions, BarCodeScanner } from "expo";
+import { View, StyleSheet, Button, Platform, StatusBar, Dimensions, Alert } from "react-native";
+import { BarCodeScanner } from "expo";
 import PropTypes from "prop-types";
 
+import ProductSans from "../constants/fonts/ProductSans";
 import Colors from "../constants/Colors";
 
 import { Header } from "../components/common";
@@ -16,37 +17,61 @@ export default class BarCodeScannerExample extends Component {
     super(props);
 
     this.state = {
-      hasCameraPermission: null,
       scanned: false
     };
   }
 
-  async componentDidMount() {
-    const { status } = await Permissions.askAsync(Permissions.CAMERA);
-    this.setState({ hasCameraPermission: status === "granted" });
-  }
-
   handleBarCodeScanned = ({ type, data }) => {
     this.setState({ scanned: true });
+
+    let productName;
+
     switch (data) {
-      case "8718452202928":
-        alert("Scanned 'Jumbo Ice Tea Peach koolzuurvrij'");
-        break;
       case "3086123174337":
-        alert("Scanned 'Bic kleurstiften'");
+        productName = "Bic kleurstiften";
         break;
-      default:
-        alert(`Scanned barcode with data ${data} has been scanned!`);
+      case "8718452202928":
+        productName = "Jumbo Ice Tea Peach koolzuurvrij";
+        break;
+      case "8718906901674":
+        productName = "AH Basic Still Water";
         break;
     }
+
+    let alertMessage = productName ? `Product: ${productName}` : `Data: ${data}`;
+
+    Alert.alert("Scanned barcode", alertMessage, [
+      {
+        text: "Scan again",
+        onPress: () => {
+          this.setState({ scanned: false });
+          console.log("Scan again");
+        },
+        style: "cancel"
+      },
+      {
+        text: "Incorrect",
+        onPress: () => {
+          this.setState({ scanned: false });
+          console.log("WRONG!");
+        },
+        style: "destructive"
+      },
+      {
+        text: "Correct",
+        onPress: () => {
+          this.setState({ scanned: false });
+          console.log("We guessed correctly!");
+        },
+        style: "default"
+      }
+    ]);
   };
 
   render() {
-    const { hasCameraPermission, scanned } = this.state;
+    const { scanned } = this.state;
     const { navigation } = this.props;
-
-    if (hasCameraPermission === null) return <Text>Requesting for camera permission</Text>;
-    if (hasCameraPermission === false) return <Text>No access to camera</Text>;
+    const { width, height } = Dimensions.get("window");
 
     return (
       <>
@@ -57,10 +82,15 @@ export default class BarCodeScannerExample extends Component {
             onBarCodeScanned={scanned ? undefined : this.handleBarCodeScanned}
             style={StyleSheet.absoluteFillObject}
           />
-          <View style={styles.overlay}>
-            <Text>Overlay</Text>
+          <View style={[styles.overlay, { width: width / 1.5, height: height / 5 }]}>
+            {scanned && (
+              <Button
+                title={"Tap to Scan Again"}
+                onPress={() => this.setState({ scanned: false })}
+                style={styles.button}
+              />
+            )}
           </View>
-          {scanned && <Button title={"Tap to Scan Again"} onPress={() => this.setState({ scanned: false })} />}
         </View>
       </>
     );
@@ -70,16 +100,21 @@ export default class BarCodeScannerExample extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: "column",
-    justifyContent: "flex-end",
+    justifyContent: "center",
+    alignItems: "center",
     zIndex: -1
   },
   overlay: {
-    flex: 1,
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
+    borderColor: Colors.white,
+    borderWidth: 2
   },
   overlayText: {
-    backgroundColor: Colors.white
+    color: Colors.white,
+    fontFamily: ProductSans.regular
+  },
+  button: {
+    width: 50
   }
 });
