@@ -1,10 +1,12 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, Image } from "react-native";
 import PropTypes from "prop-types";
 
 import ProductSans from "../constants/fonts/ProductSans";
+import Gradients from "../constants/Gradients";
 
 import { Header } from "../components/common";
+import MenuItem from "../components/home/MenuItem";
 
 export default class HomeScreen extends Component {
   static propTypes = {
@@ -16,9 +18,29 @@ export default class HomeScreen extends Component {
 
     return (
       <>
-        <Header navigation={navigation} title="NoFoodWasted" backButton={false} />
+        <Header navigation={navigation} title="Home" backButton={false} actionButton="true" actionType="settings" />
         <View style={styles.container}>
-          <Text style={styles.text}>Hello world</Text>
+          <Image style={styles.image} source={require("../assets/images/home/group_19.png")} resizeMode="contain" />
+          <View style={styles.navigation}>
+            <MenuItem
+              title="Afprijzingen beheren"
+              description="Overzicht van alle actieve afprijzingen"
+              img={require("../assets/images/home/afprijzingen.png")}
+              onPress={() => navigation.navigate("Schema")}
+            />
+            <MenuItem
+              title="Aanbod beheren"
+              description="Overzicht van alle producten"
+              img={require("../assets/images/home/aanbod.png")}
+              onPress={() => navigation.navigate("Schema")}
+            />
+            <MenuItem
+              title="Bestellingen beheren"
+              description="Overzicht van alle actieve bestellingen"
+              img={require("../assets/images/home/bestelling.png")}
+              onPress={() => navigation.navigate("Schema")}
+            />
+          </View>
         </View>
       </>
     );
@@ -28,9 +50,24 @@ export default class HomeScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     marginTop: 75,
-    padding: 20
+    flexDirection: "column",
+    flexWrap: "wrap",
+    justifyContent: "center",
+    alignItems: "stretch"
   },
   text: {
     fontFamily: ProductSans.regular
+  },
+  image: {
+    marginTop: 30,
+    marginBottom: 58,
+    height: 200,
+    alignSelf: "center"
+  },
+  navigation: {
+    flexDirection: "column",
+    flexWrap: "wrap",
+    justifyContent: "space-around",
+    alignItems: "stretch"
   }
 });

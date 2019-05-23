@@ -1,4 +1,5 @@
 export default {
   white: "#FFFFFF",
-  greyTextColor: "#5D5D5D"
+  greyTextColor: "#9A9A9A",
+  blue: "#1753BB"
 };

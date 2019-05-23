@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     height: 80,
-    paddingTop: 32,
+    paddingTop: 30,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center"
@@ -75,11 +75,11 @@ const styles = StyleSheet.create({
   },
   icon: {
     fontSize: 28,
-    color: Colors.greyTextColor
+    color: Colors.blue
   },
   title: {
     fontSize: 26,
     fontFamily: ProductSans.bold,
-    color: Colors.greyTextColor
+    color: Colors.blue
   }
 });
