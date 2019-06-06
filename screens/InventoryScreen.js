@@ -28,7 +28,7 @@ export default class HomeScreen extends Component {
       <>
         <Header navigation={navigation} title="Aanbod" />
         <Container addStyles={{ padding: 20 }}>
-          <Text style={styles.text}>
+          <Text style={styles.headDescription}>
             In het onderstaande overzicht staan alle producten die bij uw bedrijf zijn toegevoegd aan het aanbod. U kunt
             via deze pagina het aanbod uitbreiden en aanpassen.
           </Text>
@@ -38,25 +38,25 @@ export default class HomeScreen extends Component {
             <Image style={styles.image} source={require("../assets/images/home/group_19.png")} resizeMode="contain" />
             <View style={styles.inventoryContent}>
               <Text style={styles.title}>AH ijsbergsla</Text>
-              <Text style={styles.description}>Knapperige ijsbergsla, heerlijk fris van smaak.</Text>
+              <View style={styles.descriptionText}>
+                <Text style={styles.description}>Knapperige ijsbergsla, heerlijk fris van smaak.</Text>
+              </View>
             </View>
           </View>
         </Container>
-        {/* <Container addStyles={{ padding: 20, marginTop: 5 }}>
-          <TouchableOpacity
-            activeOpacity={barcodeLoading ? 1 : 0.5}
-            onPress={() => {
-              this.setState({ barcodeLoading: true });
-              setTimeout(() => {
-                navigation.navigate("Barcode");
-                this.setState({ barcodeLoading: false });
-              }, 100);
-            }}
-            style={styles.button}
-          >
-            {barcodeLoading ? <ActivityIndicator color="#FFFFFF" /> : <Text style={styles.buttonText}>Barcode</Text>}
-          </TouchableOpacity>
-        </Container> */}
+        <TouchableOpacity
+          activeOpacity={barcodeLoading ? 1 : 0.5}
+          onPress={() => {
+            this.setState({ barcodeLoading: true });
+            setTimeout(() => {
+              navigation.navigate("Barcode");
+              this.setState({ barcodeLoading: false });
+            }, 100);
+          }}
+          style={styles.TouchableOpacityStyle}
+        >
+          <Image source={require("../assets/images/icon/add.png")} style={styles.FloatingButtonStyle} />
+        </TouchableOpacity>
       </>
     );
   }
@@ -83,13 +83,50 @@ const styles = StyleSheet.create({
     fontSize: 21,
     marginBottom: 10
   },
-  description: {
+  headDescription: {
     color: Colors.greyTextColor,
     fontFamily: ProductSans.regular,
     fontSize: 14
   },
+  description: {
+    color: Colors.greyTextColor,
+    fontFamily: ProductSans.regular,
+    fontSize: 14,
+    flex: 1,
+    flexWrap: "wrap-reverse"
+  },
   image: {
+    marginRight: 35,
+    width: 71,
+    height: 71
+  },
+  InventoryItem: {
+    padding: 20,
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    backgroundColor: Colors.white,
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.greyTextColor
+  },
+  inventoryContent: {
+    width: 215
+  },
+  descriptionText: {
+    flexDirection: "row"
+  },
+  TouchableOpacityStyle: {
+    position: "absolute",
     width: 50,
-    height: 50
+    height: 50,
+    alignItems: "center",
+    justifyContent: "center",
+    right: 50,
+    bottom: 50
+  },
+  FloatingButtonStyle: {
+    resizeMode: "contain",
+    width: 80,
+    height: 80
   }
 });
