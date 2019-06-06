@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import { TouchableOpacity, Text, Image, StyleSheet, View } from "react-native";
 import Colors from "../../constants/Colors";
 import ProductSans from "../../constants/fonts/ProductSans";
-
 export default class MenuItem extends Component {
   static propTypes = {
     title: PropTypes.string,

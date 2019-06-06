@@ -24,7 +24,7 @@ export default class Header extends Component {
     actionButton: false,
     actionType: "add",
     iconName: "arrow-back",
-    color: Colors.greyTextColor
+    color: Colors.blue
   };
 
   render() {

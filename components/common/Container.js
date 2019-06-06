@@ -5,7 +5,8 @@ import { View, ScrollView, StyleSheet, Platform } from "react-native";
 export default class Container extends Component {
   static propTypes = {
     type: PropTypes.string,
-    children: PropTypes.any
+    children: PropTypes.any,
+    addStyles: PropTypes.object
   };
 
   static defaultProps = {
@@ -13,14 +14,27 @@ export default class Container extends Component {
   };
 
   render() {
-    const { type, children } = this.props;
+    const { type, children, addStyles } = this.props;
 
     switch (type) {
       default:
       case "View":
-        return <View style={[styles.container, Platform.OS === "ios" && styles.ios]}>{children}</View>;
+        return (
+          <View
+            style={[
+              styles.container,
+              addStyles,
+              { justifyContent: "center", alignItems: "stretch" },
+              Platform.OS === "ios" && styles.ios
+            ]}
+          >
+            {children}
+          </View>
+        );
       case "ScrollView":
-        return <ScrollView style={[styles.container, Platform.OS === "ios" && styles.ios]}>{children}</ScrollView>;
+        return (
+          <ScrollView style={[styles.container, addStyles, Platform.OS === "ios" && styles.ios]}>{children}</ScrollView>
+        );
     }
   }
 }
@@ -28,7 +42,8 @@ export default class Container extends Component {
 const styles = StyleSheet.create({
   container: {
     marginTop: 75,
-    padding: 20
+    flexDirection: "column",
+    flexWrap: "wrap"
   },
   ios: {
     marginTop: 100
