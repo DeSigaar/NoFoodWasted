@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     height: 80,
-    paddingTop: 32,
+    paddingTop: 30,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center"
@@ -81,10 +81,12 @@ const styles = StyleSheet.create({
     paddingRight: 20
   },
   icon: {
-    fontSize: 28
+    fontSize: 28,
+    color: Colors.blue
   },
   title: {
     fontSize: 26,
-    fontFamily: ProductSans.bold
+    fontFamily: ProductSans.bold,
+    color: Colors.blue
   }
 });

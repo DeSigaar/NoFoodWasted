@@ -1,11 +1,14 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, TouchableOpacity, ActivityIndicator } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, ActivityIndicator, View, Image } from "react-native";
 import PropTypes from "prop-types";
 
 import { Header, Container } from "../components/common";
 
 import ProductSans from "../constants/fonts/ProductSans";
 import Colors from "../constants/Colors";
+import Gradients from "../constants/Gradients";
+
+import MenuItem from "../components/home/MenuItem";
 
 export default class HomeScreen extends Component {
   static propTypes = {
@@ -26,7 +29,7 @@ export default class HomeScreen extends Component {
 
     return (
       <>
-        <Header navigation={navigation} title="NoFoodWasted" backButton={false} />
+        {/* <Header navigation={navigation} title="NoFoodWasted" backButton={false} />
         <Container>
           <TouchableOpacity
             activeOpacity={barcodeLoading ? 1 : 0.5}
@@ -44,16 +47,37 @@ export default class HomeScreen extends Component {
           <TouchableOpacity activeOpacity={0.5} onPress={() => navigation.navigate("Vision")} style={styles.button}>
             <Text style={styles.buttonText}>Vision</Text>
           </TouchableOpacity>
-        </Container>
+        </Container> */}
+        <Header navigation={navigation} title="Home" backButton={false} actionButton="true" actionType="settings" />
+        <View style={styles.container}>
+          <Image style={styles.image} source={require("../assets/images/home/group_19.png")} resizeMode="contain" />
+          <View style={styles.navigation}>
+            <MenuItem
+              title="Afprijzingen beheren"
+              description="Overzicht van alle actieve afprijzingen"
+              img={require("../assets/images/home/afprijzingen.png")}
+              onPress={() => navigation.navigate("Schema")}
+            />
+            <MenuItem
+              title="Aanbod beheren"
+              description="Overzicht van alle producten"
+              img={require("../assets/images/home/aanbod.png")}
+              onPress={() => navigation.navigate("Schema")}
+            />
+            <MenuItem
+              title="Bestellingen beheren"
+              description="Overzicht van alle actieve bestellingen"
+              img={require("../assets/images/home/bestelling.png")}
+              onPress={() => navigation.navigate("Schema")}
+            />
+          </View>
+        </View>
       </>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  text: {
-    fontFamily: ProductSans.regular
-  },
   button: {
     backgroundColor: Colors.greyTextColor,
     height: 35,
@@ -67,5 +91,27 @@ const styles = StyleSheet.create({
     fontFamily: ProductSans.regular,
     color: Colors.white,
     fontSize: 20
+  },
+  container: {
+    marginTop: 75,
+    flexDirection: "column",
+    flexWrap: "wrap",
+    justifyContent: "center",
+    alignItems: "stretch"
+  },
+  text: {
+    fontFamily: ProductSans.regular
+  },
+  image: {
+    marginTop: 30,
+    marginBottom: 58,
+    height: 200,
+    alignSelf: "center"
+  },
+  navigation: {
+    flexDirection: "column",
+    flexWrap: "wrap",
+    justifyContent: "space-around",
+    alignItems: "stretch"
   }
 });
