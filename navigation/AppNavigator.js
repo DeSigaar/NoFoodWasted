@@ -1,10 +1,13 @@
+import React, { Component } from "react";
+import { Permissions } from "expo";
+import * as firebase from "firebase";
+import "firebase/firestore";
+
 import { createAppContainer, createStackNavigator } from "react-navigation";
-import HomeScreen from "../screens/HomeScreen";
-import BarcodeScreen from "../screens/BarcodeScreen";
-import VisionScreen from "../screens/VisionScreen";
+import { HomeScreen, BarcodeScreen, VisionScreen } from "../screens";
 
 // Create the App stack with options
-export default (Navigation = createAppContainer(
+const Navigation = createAppContainer(
   createStackNavigator(
     {
       Home: { screen: HomeScreen },
@@ -18,4 +21,36 @@ export default (Navigation = createAppContainer(
       initialRouteName: "Home" // Change this if you want to directly go to a screen you are developing
     }
   )
-));
+);
+
+export default class AppNavigator extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      hasCameraPermission: null
+    };
+
+    if (!firebase.apps.length)
+      firebase.initializeApp({
+        apiKey: "AIzaSyBJvDpnmwD49n0-2gQACncAbxS9LxKZLk8",
+        authDomain: "nofoodwasted-240908.firebaseapp.com",
+        databaseURL: "https://nofoodwasted-240908.firebaseio.com",
+        projectId: "nofoodwasted-240908",
+        storageBucket: "nofoodwasted-240908.appspot.com",
+        messagingSenderId: "386112526070",
+        appId: "1:386112526070:web:3413d19f92479d8a"
+      });
+  }
+
+  async componentDidMount() {
+    const { status } = await Permissions.askAsync(Permissions.CAMERA);
+    this.setState({ hasCameraPermission: status === "granted" });
+  }
+
+  render() {
+    const { hasCameraPermission } = this.state;
+
+    return <Navigation screenProps={{ hasCameraPermission }} />;
+  }
+}

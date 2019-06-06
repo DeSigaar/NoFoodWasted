@@ -44,7 +44,9 @@
   },
   "dependencies": {
     "@google-cloud/vision": "^1.0.0",
+    "axios": "^0.18.0",
     "expo": "^32.0.0",
+    "firebase": "5.11.1",
     "prop-types": "^15.7.2",
     "react": "16.5.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-32.0.0.tar.gz",
