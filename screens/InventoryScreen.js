@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, TouchableOpacity, ActivityIndicator } from "react-native";
+import { StyleSheet, Text, View, Image, TouchableOpacity, ActivityIndicator } from "react-native";
 import PropTypes from "prop-types";
 
 import { Header, Container } from "../components/common";
@@ -28,6 +28,21 @@ export default class HomeScreen extends Component {
       <>
         <Header navigation={navigation} title="Aanbod" />
         <Container addStyles={{ padding: 20 }}>
+          <Text style={styles.text}>
+            In het onderstaande overzicht staan alle producten die bij uw bedrijf zijn toegevoegd aan het aanbod. U kunt
+            via deze pagina het aanbod uitbreiden en aanpassen.
+          </Text>
+        </Container>
+        <Container addStyles={{ marginTop: 0 }}>
+          <View style={styles.InventoryItem}>
+            <Image style={styles.image} source={require("../assets/images/home/group_19.png")} resizeMode="contain" />
+            <View style={styles.inventoryContent}>
+              <Text style={styles.title}>AH ijsbergsla</Text>
+              <Text style={styles.description}>Knapperige ijsbergsla, heerlijk fris van smaak.</Text>
+            </View>
+          </View>
+        </Container>
+        {/* <Container addStyles={{ padding: 20, marginTop: 5 }}>
           <TouchableOpacity
             activeOpacity={barcodeLoading ? 1 : 0.5}
             onPress={() => {
@@ -41,10 +56,7 @@ export default class HomeScreen extends Component {
           >
             {barcodeLoading ? <ActivityIndicator color="#FFFFFF" /> : <Text style={styles.buttonText}>Barcode</Text>}
           </TouchableOpacity>
-          <TouchableOpacity activeOpacity={0.5} onPress={() => navigation.navigate("Vision")} style={styles.button}>
-            <Text style={styles.buttonText}>Vision</Text>
-          </TouchableOpacity>
-        </Container>
+        </Container> */}
       </>
     );
   }
@@ -65,19 +77,19 @@ const styles = StyleSheet.create({
     color: Colors.white,
     fontSize: 20
   },
-  text: {
-    fontFamily: ProductSans.regular
+  title: {
+    color: Colors.blue,
+    fontFamily: ProductSans.bold,
+    fontSize: 21,
+    marginBottom: 10
+  },
+  description: {
+    color: Colors.greyTextColor,
+    fontFamily: ProductSans.regular,
+    fontSize: 14
   },
   image: {
-    marginTop: 30,
-    marginBottom: 58,
-    height: 200,
-    alignSelf: "center"
-  },
-  navigation: {
-    flexDirection: "column",
-    flexWrap: "wrap",
-    justifyContent: "space-around",
-    alignItems: "stretch"
+    width: 50,
+    height: 50
   }
 });
