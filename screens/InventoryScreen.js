@@ -3,11 +3,12 @@ import { StyleSheet, Text, View, Image, TouchableOpacity, ActivityIndicator } fr
 import PropTypes from "prop-types";
 
 import { Header, Container } from "../components/common";
+import { InventoryItem } from "../components/Inventory";
 
 import ProductSans from "../constants/fonts/ProductSans";
 import Colors from "../constants/Colors";
 
-export default class HomeScreen extends Component {
+export default class InventoryScreen extends Component {
   static propTypes = {
     navigation: PropTypes.object
   };
@@ -34,7 +35,9 @@ export default class HomeScreen extends Component {
           </Text>
         </Container>
         <Container addStyles={{ marginTop: 0 }}>
-          <View style={styles.InventoryItem}>
+          <InventoryItem title="AH ijsbergsla" description="Knapperige ijsbergsla, heerlijk fris van smaak." />
+          <InventoryItem title="Ola Ijs raket" description="De frisse combinatie van ananas, framboos en sinaasappel verveelt nooit." />
+          {/* <View style={styles.InventoryItem}>
             <Image style={styles.image} source={require("../assets/images/home/group_19.png")} resizeMode="contain" />
             <View style={styles.inventoryContent}>
               <Text style={styles.title}>AH ijsbergsla</Text>
@@ -42,7 +45,7 @@ export default class HomeScreen extends Component {
                 <Text style={styles.description}>Knapperige ijsbergsla, heerlijk fris van smaak.</Text>
               </View>
             </View>
-          </View>
+          </View> */}
         </Container>
         <TouchableOpacity
           activeOpacity={barcodeLoading ? 1 : 0.5}
