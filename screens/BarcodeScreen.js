@@ -42,7 +42,6 @@ export default class BarcodeScreen extends Component {
 
   handleBarCodeScanned = ({ type, data }) => {
     this.setState({ scanned: true, loading: true, modalShowing: false, modalLoading: false, type, barcode: data });
-    const { alert } = this;
 
     firebase
       .firestore()
@@ -55,18 +54,18 @@ export default class BarcodeScreen extends Component {
           // Found no product in our database
           // Ask to check external
           Alert.alert(
-            "No product found",
-            "Do you want to search for this product in an external database?",
+            "Geen product gevonden",
+            "Wil je dat we extern zoeken naar het product?",
             [
               {
-                text: "Cancel",
+                text: "Annuleren",
                 onPress: () => {
                   this.setState({ loading: false });
                 },
                 style: "cancel"
               },
               {
-                text: "Search",
+                text: "Zoeken",
                 onPress: () => {
                   axios
                     .get("https://api.upcitemdb.com/prod/trial/lookup", {
@@ -80,18 +79,18 @@ export default class BarcodeScreen extends Component {
                         // Found a product in the external database call
                         // Ask user to add this product to our database
                         Alert.alert(
-                          `Found ${items[0].title}`,
-                          "Do you want to add this product to the database?",
+                          `${items[0].title} gevonden`,
+                          "Wil je dit product toevoegen aan je aanbod?",
                           [
                             {
-                              text: "Cancel",
+                              text: "Annuleren",
                               onPress: () => {
                                 this.setState({ loading: false });
                               },
                               style: "cancel"
                             },
                             {
-                              text: "Add to database",
+                              text: "Voeg toe",
                               onPress: () => {
                                 // Show user a preview of the product before adding
                                 this.setState({
@@ -110,18 +109,18 @@ export default class BarcodeScreen extends Component {
                         // No product found in external database
                         // Ask user to add new product to our database
                         Alert.alert(
-                          "No product found",
-                          "Do you want to add this product to the database manually once?",
+                          "Geen product gevonden",
+                          "Wil je dit product handmatig toevoegen aan je aanbod?",
                           [
                             {
-                              text: "Cancel",
+                              text: "Annuleren",
                               onPress: () => {
                                 this.setState({ loading: false });
                               },
                               style: "cancel"
                             },
                             {
-                              text: "Manually add",
+                              text: "Handmatig toevoegen",
                               onPress: () => {
                                 // Show user a screen with all data in it
                                 this.setState({ modalShowing: true });
@@ -148,17 +147,17 @@ export default class BarcodeScreen extends Component {
           querySnapshot.forEach(doc => {
             Alert.alert(
               `${doc.get("brand")} ${doc.get("name")}`,
-              `Do you want to sell this product discounted at €${doc.get("discounted_price").toFixed(2)}?`,
+              `Wil je dit product afprijzen met de prijs van €${doc.get("discounted_price").toFixed(2)}?`,
               [
                 {
-                  text: "Cancel",
+                  text: "Annuleren",
                   onPress: () => {
                     this.setState({ loading: false });
                   },
                   style: "cancel"
                 },
                 {
-                  text: "Discount product",
+                  text: "Product afprijzen",
                   onPress: () => {
                     // TODO: Actually discount this item
                     console.log("Barcode: Added to discounts!");
@@ -202,8 +201,8 @@ export default class BarcodeScreen extends Component {
         regular_price: Number(regularPrice),
         type
       })
-      .then(docRef => {
-        Alert.alert(`Added ${name} to database`, "Successfully added the product to the database!");
+      .then(() => {
+        Alert.alert(`${name} toegevoegd!`, "Het product in je aanbod zetten ging goed!");
         this.setState({
           loading: false,
           modalShowing: false,
@@ -226,15 +225,15 @@ export default class BarcodeScreen extends Component {
 
   closeModal = () => {
     Alert.alert(
-      "Are you sure you want to leave?",
-      "Any information will be lost!",
+      "Weet je zeker dat je wilt afbreken?",
+      "Alle informatie zal verloren gaan.",
       [
         {
-          text: "Stay",
+          text: "Blijf",
           style: "default"
         },
         {
-          text: "Leave",
+          text: "Breek af",
           onPress: () => {
             this.setState({ modalShowing: false });
           },
@@ -243,15 +242,6 @@ export default class BarcodeScreen extends Component {
       ],
       { cancelable: false }
     );
-  };
-
-  alert = (type, title, message, options, cancelable) => {
-    if (type) {
-      Alert.alert("Hey");
-    } else {
-      console.log(type, title, message, options, cancelable);
-      Alert.alert(title, message, options, { cancelable });
-    }
   };
 
   render() {
