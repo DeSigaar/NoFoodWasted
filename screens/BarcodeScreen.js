@@ -11,7 +11,7 @@ import { Overlay, Modal as ModalContent } from "../components/barcode";
 
 export default class BarcodeScreen extends Component {
   static propTypes = {
-    navigation: PropTypes.object
+    navigation: PropTypes.object.isRequired
   };
 
   constructor(props) {
@@ -42,6 +42,7 @@ export default class BarcodeScreen extends Component {
 
   handleBarCodeScanned = ({ type, data }) => {
     this.setState({ scanned: true, loading: true, modalShowing: false, modalLoading: false, type, barcode: data });
+    const { alert } = this;
 
     firebase
       .firestore()
@@ -244,12 +245,19 @@ export default class BarcodeScreen extends Component {
     );
   };
 
+  alert = (type, title, message, options, cancelable) => {
+    if (type) {
+      Alert.alert("Hey");
+    } else {
+      console.log(type, title, message, options, cancelable);
+      Alert.alert(title, message, options, { cancelable });
+    }
+  };
+
   render() {
     const { scanned, loading, modalShowing } = this.state;
     const { navigation } = this.props;
     const { width, height } = Dimensions.get("window");
-
-    console.log(this.state);
 
     return (
       <>

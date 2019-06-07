@@ -1,48 +1,72 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View, Image, TouchableOpacity, ActivityIndicator } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, ActivityIndicator } from "react-native";
 import PropTypes from "prop-types";
+import * as firebase from "firebase";
 
 import { Header, Container } from "../components/common";
+import { InventoryItem } from "../components/inventory";
+import { MaterialIcons } from "@expo/vector-icons";
 
 import ProductSans from "../constants/fonts/ProductSans";
 import Colors from "../constants/Colors";
 
 export default class HomeScreen extends Component {
   static propTypes = {
-    navigation: PropTypes.object
+    navigation: PropTypes.object.isRequired
   };
 
   constructor(props) {
     super(props);
 
     this.state = {
-      barcodeLoading: false
+      barcodeLoading: false,
+      products: []
     };
+  }
+
+  componentDidMount() {
+    firebase
+      .firestore()
+      .collection("products")
+      .onSnapshot(querySnapshot => {
+        let products = [];
+        querySnapshot.forEach(doc => {
+          products.push({ id: doc.id, ...doc.data() });
+        });
+        this.setState({ products });
+      });
   }
 
   render() {
     const { navigation } = this.props;
-    const { barcodeLoading } = this.state;
+    const { barcodeLoading, products } = this.state;
+    let first = true;
 
     return (
       <>
         <Header navigation={navigation} title="Aanbod" />
-        <Container addStyles={{ padding: 20 }}>
-          <Text style={styles.headDescription}>
+        <Container addStyles={{ padding: 20, paddingBottom: 10, paddingTop: 10 }}>
+          <Text style={styles.head}>
             In het onderstaande overzicht staan alle producten die bij uw bedrijf zijn toegevoegd aan het aanbod. U kunt
             via deze pagina het aanbod uitbreiden en aanpassen.
           </Text>
         </Container>
-        <Container addStyles={{ marginTop: 0 }}>
-          <View style={styles.InventoryItem}>
-            <Image style={styles.image} source={require("../assets/images/home/group_19.png")} resizeMode="contain" />
-            <View style={styles.inventoryContent}>
-              <Text style={styles.title}>AH ijsbergsla</Text>
-              <View style={styles.descriptionText}>
-                <Text style={styles.description}>Knapperige ijsbergsla, heerlijk fris van smaak.</Text>
-              </View>
-            </View>
-          </View>
+        <Container type="ScrollView" addStyles={styles.container}>
+          {products !== [] ? (
+            products.map(product => {
+              if (first) {
+                first = false;
+                return <InventoryItem key={product.id} product={product} first={true} />;
+              } else {
+                return <InventoryItem key={product.id} product={product} first={false} />;
+              }
+            })
+          ) : (
+            <>
+              <ActivityIndicator color={Colors.blue} style={styles.loader} size="large" />
+              <Text style={styles.loaderText}>Laden van producten...</Text>
+            </>
+          )}
         </Container>
         <TouchableOpacity
           activeOpacity={barcodeLoading ? 1 : 0.5}
@@ -53,9 +77,9 @@ export default class HomeScreen extends Component {
               this.setState({ barcodeLoading: false });
             }, 100);
           }}
-          style={styles.TouchableOpacityStyle}
+          style={styles.FAB}
         >
-          <Image source={require("../assets/images/icon/add.png")} style={styles.FloatingButtonStyle} />
+          {barcodeLoading ? <ActivityIndicator color="#FFFFFF" /> : <MaterialIcons style={styles.FABicon} name="add" />}
         </TouchableOpacity>
       </>
     );
@@ -63,70 +87,37 @@ export default class HomeScreen extends Component {
 }
 
 const styles = StyleSheet.create({
-  button: {
-    backgroundColor: Colors.greyTextColor,
-    height: 35,
-    width: "100%",
-    borderRadius: 10,
-    justifyContent: "center",
-    alignItems: "center",
-    marginBottom: 14
-  },
-  buttonText: {
-    fontFamily: ProductSans.regular,
-    color: Colors.white,
-    fontSize: 20
-  },
-  title: {
-    color: Colors.blue,
-    fontFamily: ProductSans.bold,
-    fontSize: 21,
-    marginBottom: 10
-  },
-  headDescription: {
+  head: {
     color: Colors.greyTextColor,
     fontFamily: ProductSans.regular,
     fontSize: 14
   },
-  description: {
-    color: Colors.greyTextColor,
-    fontFamily: ProductSans.regular,
-    fontSize: 14,
-    flex: 1,
-    flexWrap: "wrap-reverse"
+  container: {
+    margin: 0,
+    marginTop: 0
   },
-  image: {
-    marginRight: 35,
-    width: 71,
-    height: 71
+  loader: {
+    padding: 40,
+    paddingBottom: 10
   },
-  InventoryItem: {
-    padding: 20,
-    flexDirection: "row",
-    justifyContent: "flex-start",
-    alignItems: "center",
-    backgroundColor: Colors.white,
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.greyTextColor
+  loaderText: {
+    color: Colors.blue,
+    textAlign: "center"
   },
-  inventoryContent: {
-    width: 215
-  },
-  descriptionText: {
-    flexDirection: "row"
-  },
-  TouchableOpacityStyle: {
+  FAB: {
     position: "absolute",
-    width: 50,
-    height: 50,
+    width: 60,
+    height: 60,
+    borderRadius: 60,
+    backgroundColor: Colors.blue,
     alignItems: "center",
     justifyContent: "center",
-    right: 50,
-    bottom: 50
+    right: 25,
+    bottom: 25,
+    elevation: 4
   },
-  FloatingButtonStyle: {
-    resizeMode: "contain",
-    width: 80,
-    height: 80
+  FABicon: {
+    fontSize: 35,
+    color: Colors.white
   }
 });

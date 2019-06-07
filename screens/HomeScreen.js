@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { StyleSheet, View, Image } from "react-native";
+import { StyleSheet, Image } from "react-native";
 import PropTypes from "prop-types";
 
 import { Header, Container } from "../components/common";
@@ -11,7 +11,7 @@ import MenuItem from "../components/home/MenuItem";
 
 export default class HomeScreen extends Component {
   static propTypes = {
-    navigation: PropTypes.object
+    navigation: PropTypes.object.isRequired
   };
 
   render() {
@@ -19,29 +19,39 @@ export default class HomeScreen extends Component {
 
     return (
       <>
-        <Header navigation={navigation} title="Home" backButton={false} actionButton="true" actionType="settings" />
-        <Container>
-          <Image style={styles.image} source={require("../assets/images/home/group_19.png")} resizeMode="contain" />
-          <View style={styles.navigation}>
-            <MenuItem
-              title="Afprijzingen beheren"
-              description="Overzicht van alle actieve afprijzingen"
-              img={require("../assets/images/home/afprijzingen.png")}
-              onPress={() => navigation.navigate("Schema")}
-            />
-            <MenuItem
-              title="Aanbod beheren"
-              description="Overzicht van alle producten"
-              img={require("../assets/images/home/aanbod.png")}
-              onPress={() => navigation.navigate("Inventory")}
-            />
-            <MenuItem
-              title="Bestellingen beheren"
-              description="Overzicht van alle actieve bestellingen"
-              img={require("../assets/images/home/bestelling.png")}
-              onPress={() => navigation.navigate("Schema")}
-            />
-          </View>
+        <Header
+          navigation={navigation}
+          title="NoFoodWasted"
+          backButton={false}
+          actionButton={true}
+          actionType="settings"
+          actionPress={() => navigation.navigate("Settings")}
+        />
+        <Container addStyles={styles.navigation}>
+          <Image
+            style={styles.image}
+            source={require("../assets/images/undraw/deliveries.png")}
+            loadingIndicatorSource={require("../assets/images/loading.gif")}
+            resizeMode="contain"
+          />
+          <MenuItem
+            title="Afprijzingen beheren"
+            description="Overzicht van alle actieve afprijzingen"
+            img={require("../assets/images/home/discount.png")}
+            onPress={() => navigation.navigate("Schema")}
+          />
+          <MenuItem
+            title="Aanbod beheren"
+            description="Overzicht van alle producten"
+            img={require("../assets/images/home/storage.png")}
+            onPress={() => navigation.navigate("Inventory")}
+          />
+          <MenuItem
+            title="Bestellingen beheren"
+            description="Overzicht van alle actieve bestellingen"
+            img={require("../assets/images/home/order.png")}
+            onPress={() => navigation.navigate("Schema")}
+          />
         </Container>
       </>
     );
@@ -67,14 +77,13 @@ const styles = StyleSheet.create({
     fontFamily: ProductSans.regular
   },
   image: {
-    marginTop: 30,
-    marginBottom: 58,
     height: 200,
+    marginTop: 10,
+    marginBottom: 15,
     alignSelf: "center"
   },
   navigation: {
     flexDirection: "column",
-    flexWrap: "wrap",
     justifyContent: "space-around",
     alignItems: "stretch"
   }

@@ -1,8 +1,10 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
 import { TouchableOpacity, Text, Image, StyleSheet, View } from "react-native";
+import PropTypes from "prop-types";
+
 import Colors from "../../constants/Colors";
 import ProductSans from "../../constants/fonts/ProductSans";
+
 export default class MenuItem extends Component {
   static propTypes = {
     title: PropTypes.string,
@@ -15,9 +17,14 @@ export default class MenuItem extends Component {
     const { title, description, img, onPress } = this.props;
 
     return (
-      <TouchableOpacity activeOpacity={0.7} style={styles.item} onPress={onPress}>
+      <TouchableOpacity activeOpacity={0.6} style={styles.item} onPress={onPress}>
         <View style={styles.menuContainer}>
-          <Image style={styles.image} source={img} resizeMode="contain" />
+          <Image
+            style={styles.image}
+            source={img}
+            loadingIndicatorSource={require("../../assets/images/loading.gif")}
+            resizeMode="contain"
+          />
           <View style={styles.itemContent}>
             <Text style={styles.title}>{title}</Text>
             <Text style={styles.description}>{description}</Text>
@@ -34,8 +41,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 10,
     borderColor: Colors.white,
-    flexWrap: "wrap",
-    flexGrow: 1,
     flexBasis: "15%",
     alignItems: "center",
     justifyContent: "center",

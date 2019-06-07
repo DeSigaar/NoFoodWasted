@@ -4,7 +4,7 @@ import * as firebase from "firebase";
 import "firebase/firestore";
 
 import { createAppContainer, createStackNavigator } from "react-navigation";
-import { HomeScreen, BarcodeScreen, InventoryScreen } from "../screens";
+import { HomeScreen, BarcodeScreen, InventoryScreen, SettingsScreen } from "../screens";
 
 // Create the App stack with options
 const Navigation = createAppContainer(
@@ -12,7 +12,8 @@ const Navigation = createAppContainer(
     {
       Home: { screen: HomeScreen },
       Barcode: { screen: BarcodeScreen },
-      Inventory: { screen: InventoryScreen }
+      Inventory: { screen: InventoryScreen },
+      Settings: { screen: SettingsScreen }
     },
     {
       defaultNavigationOptions: {
