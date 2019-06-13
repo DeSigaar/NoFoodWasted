@@ -44,7 +44,8 @@ const styles = StyleSheet.create({
     flexBasis: "15%",
     alignItems: "center",
     justifyContent: "center",
-    color: Colors.white
+    color: Colors.white,
+    marginTop: 15
   },
   title: {
     color: Colors.blue,

@@ -34,24 +34,26 @@ export default class HomeScreen extends Component {
             loadingIndicatorSource={require("../assets/images/loading.gif")}
             resizeMode="contain"
           />
-          <MenuItem
-            title="Afprijzingen beheren"
-            description="Overzicht van alle actieve afprijzingen"
-            img={require("../assets/images/home/discount.png")}
-            onPress={() => navigation.navigate("Schema")}
-          />
-          <MenuItem
-            title="Aanbod beheren"
-            description="Overzicht van alle producten"
-            img={require("../assets/images/home/storage.png")}
-            onPress={() => navigation.navigate("Inventory")}
-          />
-          <MenuItem
-            title="Bestellingen beheren"
-            description="Overzicht van alle actieve bestellingen"
-            img={require("../assets/images/home/order.png")}
-            onPress={() => navigation.navigate("Schema")}
-          />
+          <Container addStyles={styles.menu}>
+            <MenuItem
+              title="Afprijzingen beheren"
+              description="Overzicht van alle actieve afprijzingen"
+              img={require("../assets/images/home/discount.png")}
+              onPress={() => navigation.navigate("Schema")}
+            />
+            <MenuItem
+              title="Aanbod beheren"
+              description="Overzicht van alle producten"
+              img={require("../assets/images/home/storage.png")}
+              onPress={() => navigation.navigate("Inventory")}
+            />
+            <MenuItem
+              title="Bestellingen beheren"
+              description="Overzicht van alle actieve bestellingen"
+              img={require("../assets/images/home/order.png")}
+              onPress={() => navigation.navigate("Schema")}
+            />
+          </Container>
         </Container>
       </>
     );
@@ -81,6 +83,9 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 15,
     alignSelf: "center"
+  },
+  menu: {
+    marginTop: 30
   },
   navigation: {
     flexDirection: "column",
