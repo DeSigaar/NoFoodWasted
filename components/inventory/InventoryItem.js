@@ -19,7 +19,7 @@ export default class InventoryItem extends Component {
       <View key={product.id} style={[styles.item, first && { borderTopWidth: 0 }, { width }]}>
         <Image
           style={styles.image}
-          source={require("../../assets/images/undraw/deliveries.png")}
+          source={require("../../assets/images/home/storage.png")}
           loadingIndicatorSource={require("../../assets/images/loading.gif")}
           resizeMode="contain"
         />
@@ -48,8 +48,8 @@ const styles = StyleSheet.create({
   image: {
     marginLeft: 10,
     marginRight: 20,
-    width: 71,
-    height: 71
+    width: 60,
+    height: 60
   },
   content: {
     flex: 1
