@@ -39,7 +39,7 @@ export default class HomeScreen extends Component {
               title="Afprijzingen beheren"
               description="Overzicht van alle actieve afprijzingen"
               img={require("../assets/images/home/discount.png")}
-              onPress={() => navigation.navigate("Schema")}
+              onPress={() => navigation.navigate("Discount")}
             />
             <MenuItem
               title="Aanbod beheren"

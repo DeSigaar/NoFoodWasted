@@ -6,7 +6,7 @@ import TextInputWithHeader from "./TextInputWithHeader";
 import ProductSans from "../../constants/fonts/ProductSans";
 import Colors from "../../constants/Colors";
 
-export default class Modal extends Component {
+export default class DiscountModal extends Component {
   static propTypes = {
     onClose: PropTypes.func.isRequired,
     state: PropTypes.object.isRequired,
@@ -45,18 +45,34 @@ export default class Modal extends Component {
     this.calculateDiscount(discountPercentageOff.toFixed(0));
   };
 
+  onAmountPress = type => {
+    const { onChangeText } = this.props;
+    let { amount } = this.props.state;
+    amount = Number(amount);
+
+    switch (type) {
+      case "add":
+        if (amount !== 999) amount += 1;
+        break;
+      case "remove":
+        if (amount !== 0) amount -= 1;
+        break;
+    }
+
+    onChangeText("amount", amount.toFixed(0));
+  };
+
   render() {
     const { onClose, state, onChangeText, onSubmit } = this.props;
     const {
-      type,
-      barcode,
       name,
       brand,
       description,
       regularPrice,
       discountedPrice,
       discountPercentageOff,
-      modalLoading
+      modalLoading,
+      amount
     } = state;
 
     return (
@@ -64,36 +80,11 @@ export default class Modal extends Component {
         <TouchableOpacity activeOpacity={0.2} onPress={() => onClose()} style={styles.close}>
           <MaterialIcons name="close" style={styles.closeIcon} />
         </TouchableOpacity>
-        <Text style={styles.header}>Toevoegen van product</Text>
-        <View style={styles.box}>
-          <View style={styles.left}>
-            <Text style={styles.inputHeader}>Type</Text>
-            <TextInput style={styles.textInput} value={type.toString()} editable={false} />
-          </View>
-          <View style={styles.right}>
-            <Text style={styles.inputHeader}>Barcode</Text>
-            <TextInput style={styles.textInput} value={barcode.toString()} editable={false} />
-          </View>
-        </View>
-        <View style={styles.divider} />
-        <TextInputWithHeader
-          header="Merk naam"
-          property="brand"
-          onChangeText={(property, value) => onChangeText(property, value)}
-          value={brand}
-        />
-        <TextInputWithHeader
-          header="Product naam"
-          property="name"
-          onChangeText={(property, value) => onChangeText(property, value)}
-          value={name}
-        />
-        <TextInputWithHeader
-          header="Beschrijving"
-          property="description"
-          onChangeText={(property, value) => onChangeText(property, value)}
-          value={description}
-        />
+        <Text style={styles.header}>Product afprijzen</Text>
+        <Text style={styles.h1}>
+          {brand} {name}
+        </Text>
+        <Text style={styles.p}>{description}</Text>
         <View style={styles.divider} />
         <TextInputWithHeader
           header="Normale prijs"
@@ -136,6 +127,31 @@ export default class Modal extends Component {
             <TextInput style={styles.textInput} value={discountedPrice.toString()} editable={false} />
           </View>
         </View>
+        <View style={styles.divider} />
+
+        <View style={styles.left2}>
+          <Text style={styles.inputHeader}>Aantal</Text>
+          <View style={styles.number}>
+            <TouchableOpacity
+              activeOpacity={0.2}
+              style={styles.numberButton}
+              onPress={() => this.onAmountPress("remove")}
+            >
+              <MaterialIcons name="remove" style={styles.numberIcon} />
+            </TouchableOpacity>
+            <TextInput
+              maxLength={3}
+              keyboardType="numeric"
+              value={amount.toString()}
+              style={[styles.textInput, styles.numberInput, styles.activeNumberInput]}
+              onChangeText={e => onChangeText("amount", e)}
+            />
+            <TouchableOpacity activeOpacity={0.2} style={styles.numberButton} onPress={() => this.onAmountPress("add")}>
+              <MaterialIcons name="add" style={styles.numberIcon} />
+            </TouchableOpacity>
+          </View>
+        </View>
+
         <TouchableOpacity
           activeOpacity={0.5}
           onPress={() => {
@@ -147,7 +163,7 @@ export default class Modal extends Component {
           {modalLoading ? (
             <ActivityIndicator color="#FFFFFF" />
           ) : (
-            <Text style={styles.submitText}>Add product to database</Text>
+            <Text style={styles.submitText}>Prijs product af</Text>
           )}
         </TouchableOpacity>
       </>
@@ -170,6 +186,12 @@ const styles = StyleSheet.create({
     fontSize: 24,
     marginTop: -6,
     marginBottom: 16
+  },
+  h1: {
+    fontFamily: ProductSans.bold
+  },
+  p: {
+    fontFamily: ProductSans.regular
   },
   inputHeader: {
     fontSize: 14,
@@ -224,6 +246,9 @@ const styles = StyleSheet.create({
     width: 48,
     textAlign: "center"
   },
+  activeNumberInput: {
+    borderColor: Colors.black
+  },
   divider: {
     height: 1,
     width: "90%",
@@ -234,11 +259,12 @@ const styles = StyleSheet.create({
     backgroundColor: "black"
   },
   submitButton: {
-    marginTop: 16,
+    marginTop: 8,
     backgroundColor: Colors.blue,
     borderRadius: 13,
     height: 35,
-    width: 220,
+    paddingLeft: 25,
+    paddingRight: 25,
     justifyContent: "center",
     alignItems: "center",
     alignSelf: "flex-end"

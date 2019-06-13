@@ -7,7 +7,7 @@ import * as firebase from "firebase";
 import "firebase/firestore";
 
 import { Header, Modal } from "../components/common";
-import { Overlay, Modal as ModalContent } from "../components/barcode";
+import { Overlay, Modal as ModalContent, DiscountModal as ModalContentDiscount } from "../components/barcode";
 
 export default class BarcodeScreen extends Component {
   static propTypes = {
@@ -24,6 +24,9 @@ export default class BarcodeScreen extends Component {
       scanned: false,
       loading: false,
       modalShowing: false,
+      modalLoading: false,
+      discount: false,
+      id: "",
       type: 0,
       barcode: "",
       name: "",
@@ -32,12 +35,12 @@ export default class BarcodeScreen extends Component {
       regularPrice: 0,
       discountedPrice: 0,
       discountPercentageOff: 0,
-      modalLoading: false
+      amount: 0
     };
   }
 
   componentWillUnmount() {
-    this.setState({ modalShowing: false });
+    this.setState({ scanned: false, loading: false, modalShowing: false, modalLoading: false });
   }
 
   handleBarCodeScanned = ({ type, data }) => {
@@ -97,7 +100,8 @@ export default class BarcodeScreen extends Component {
                                   modalShowing: true,
                                   name: items[0].title,
                                   brand: items[0].brand,
-                                  description: items[0].description
+                                  description: items[0].description,
+                                  discount: false
                                 });
                               },
                               style: "default"
@@ -123,7 +127,7 @@ export default class BarcodeScreen extends Component {
                               text: "Handmatig toevoegen",
                               onPress: () => {
                                 // Show user a screen with all data in it
-                                this.setState({ modalShowing: true });
+                                this.setState({ modalShowing: true, discount: false });
                               },
                               style: "default"
                             }
@@ -147,7 +151,7 @@ export default class BarcodeScreen extends Component {
           querySnapshot.forEach(doc => {
             Alert.alert(
               `${doc.get("brand")} ${doc.get("name")}`,
-              `Wil je dit product afprijzen met de prijs van €${doc.get("discounted_price").toFixed(2)}?`,
+              "Wil je dit product afprijzen?",
               [
                 {
                   text: "Annuleren",
@@ -159,8 +163,20 @@ export default class BarcodeScreen extends Component {
                 {
                   text: "Product afprijzen",
                   onPress: () => {
-                    // TODO: Actually discount this item
-                    console.log("Barcode: Added to discounts!");
+                    this.setState({
+                      id: doc.id,
+                      ...doc.data(),
+                      discountPercentageOff: doc.get("discount_percentage_off"),
+                      discountedPrice: doc.get("discounted_price"),
+                      regularPrice: doc.get("regular_price"),
+                      modalShowing: true,
+                      discount: true
+                    });
+                    // review discount / price
+                    // save that to fb as well
+
+                    // show modal to set amount
+                    // save to fb in discounts
                   },
                   style: "default"
                 }
@@ -202,7 +218,7 @@ export default class BarcodeScreen extends Component {
         type
       })
       .then(() => {
-        Alert.alert(`${name} toegevoegd!`, "Het product in je aanbod zetten ging goed!");
+        Alert.alert(`${brand} ${name}  toegevoegd!`, "Het product in je aanbod zetten ging goed!");
         this.setState({
           loading: false,
           modalShowing: false,
@@ -223,6 +239,63 @@ export default class BarcodeScreen extends Component {
       });
   };
 
+  discountProductToFirebase = () => {
+    const { id, brand, name, regularPrice, discountedPrice, discountPercentageOff, amount } = this.state;
+
+    let regular_price = Number(regularPrice);
+    let discounted_price = Number(discountedPrice);
+    let discount_percentage_off = Number(discountPercentageOff);
+
+    firebase
+      .firestore()
+      .collection("products")
+      .doc(id)
+      .update({
+        regular_price,
+        discounted_price,
+        discount_percentage_off
+      })
+      .then(() => {
+        if (amount !== 0) {
+          firebase
+            .firestore()
+            .collection("discounts")
+            .add({
+              amount: Number(amount),
+              product: id
+            })
+            .then(() => {
+              Alert.alert(`${brand} ${name} afgeprijsd!`, "Het product is afgeprijsd!");
+              this.setState({
+                loading: false,
+                modalShowing: false,
+                modalLoading: false,
+                discount: false,
+                id: "",
+                type: 0,
+                barcode: "",
+                name: "",
+                brand: "",
+                description: "",
+                regularPrice: 0,
+                discountedPrice: 0,
+                discountPercentageOff: 0,
+                amount: 0
+              });
+            })
+            .catch(error => {
+              console.log(error);
+            });
+        } else {
+          Alert.alert("Geen aantal aangegeven!", "Het product is nog niet afgeprijsd.");
+          this.setState({ modalLoading: false });
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
+
   closeModal = () => {
     Alert.alert(
       "Weet je zeker dat je wilt afbreken?",
@@ -235,7 +308,7 @@ export default class BarcodeScreen extends Component {
         {
           text: "Breek af",
           onPress: () => {
-            this.setState({ modalShowing: false });
+            this.setState({ loading: false, modalShowing: false, modalLoading: false });
           },
           style: "destructive"
         }
@@ -245,7 +318,7 @@ export default class BarcodeScreen extends Component {
   };
 
   render() {
-    const { scanned, loading, modalShowing } = this.state;
+    const { scanned, loading, modalShowing, discount } = this.state;
     const { navigation } = this.props;
     const { width, height } = Dimensions.get("window");
 
@@ -265,13 +338,27 @@ export default class BarcodeScreen extends Component {
             loading={loading}
             onPress={() => this.setState({ scanned: false })}
           />
-          <Modal isVisible={modalShowing} width={width - 80} height={500} onBackdropPress={() => this.closeModal()}>
-            <ModalContent
-              onClose={() => this.closeModal()}
-              state={this.state}
-              onChangeText={(property, value) => this.setState({ [property]: value })}
-              onSubmit={() => this.saveProductToFirebase()}
-            />
+          <Modal
+            isVisible={modalShowing}
+            width={width - 80}
+            height={discount ? 400 : 500}
+            onBackdropPress={() => this.closeModal()}
+          >
+            {discount ? (
+              <ModalContentDiscount
+                onClose={() => this.closeModal()}
+                state={this.state}
+                onChangeText={(property, value) => this.setState({ [property]: value })}
+                onSubmit={() => this.discountProductToFirebase()}
+              />
+            ) : (
+              <ModalContent
+                onClose={() => this.closeModal()}
+                state={this.state}
+                onChangeText={(property, value) => this.setState({ [property]: value })}
+                onSubmit={() => this.saveProductToFirebase()}
+              />
+            )}
           </Modal>
         </View>
       </>

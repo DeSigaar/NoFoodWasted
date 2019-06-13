@@ -1,12 +1,10 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, TouchableOpacity, Dimensions, ActivityIndicator, Alert } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, ActivityIndicator } from "react-native";
 import PropTypes from "prop-types";
 import * as firebase from "firebase";
 
-import { Header, Container, Modal } from "../components/common";
-import { Modal as ModalContent } from "../components/barcode";
-
-import { InventoryItem } from "../components/inventory";
+import { Header, Container } from "../components/common";
+import { DiscountItem } from "../components/Discount";
 import { MaterialIcons } from "@expo/vector-icons";
 
 import ProductSans from "../constants/fonts/ProductSans";
@@ -23,6 +21,7 @@ export default class HomeScreen extends Component {
     this.state = {
       barcodeLoading: false,
       products: [],
+      discounts: [],
       loaded: false
     };
   }
@@ -36,93 +35,54 @@ export default class HomeScreen extends Component {
         querySnapshot.forEach(doc => {
           products.push({ id: doc.id, ...doc.data() });
         });
-        this.setState({ products, loaded: true });
+        this.setState({ products });
+      });
+
+    firebase
+      .firestore()
+      .collection("discounts")
+      .onSnapshot(querySnapshot => {
+        let discounts = [];
+        querySnapshot.forEach(doc => {
+          discounts.push({ id: doc.id, ...doc.data() });
+        });
+        this.setState({ discounts, loaded: true });
       });
   }
 
-  closeModal = () => {
-    Alert.alert(
-      "Weet je zeker dat je wilt afbreken?",
-      "De informatie zal niet worden opgeslagen.",
-      [
-        {
-          text: "Blijf",
-          style: "default"
-        },
-        {
-          text: "Breek af",
-          onPress: () => {
-            this.setState({ modalShowing: false });
-          },
-          style: "destructive"
-        }
-      ],
-      { cancelable: false }
-    );
-  };
-
-  handleItemClick = () => {
-    this.setState({ modalShowing: true });
-  };
-
   render() {
     const { navigation } = this.props;
-<<<<<<< HEAD
-    const { barcodeLoading, products, modalShowing } = this.state;
-    const { width, height } = Dimensions.get("window");
-=======
-    const { barcodeLoading, products, loaded } = this.state;
->>>>>>> dev
+    const { barcodeLoading, products, discounts, loaded } = this.state;
     let first = true;
 
     return (
       <>
-        <Header navigation={navigation} title="Aanbod" />
+        <Header navigation={navigation} title="Afprijzen" />
         <Container addStyles={{ padding: 20, paddingBottom: 10, paddingTop: 10 }}>
           <Text style={styles.head}>
-            In het onderstaande overzicht staan alle producten die bij uw bedrijf zijn toegevoegd aan het aanbod. U kunt
-            via deze pagina het aanbod uitbreiden en aanpassen.
+            In het onderstaande overzicht vindt je alle actieve afprijzingen. Je kan zien hoeveel de voorraad nog is en
+            hoeveel keer een product bekeken is. Er is te zien wat de oude prijs was en de nieuwe prijs is. Op deze
+            pagina kan je een product toevoegen of aanpassen.
           </Text>
         </Container>
         <Container type="ScrollView" addStyles={styles.container}>
           {loaded ? (
-            products.map(product => {
+            discounts.map(discount => {
+              const product = products.filter(product => product.id === discount.product);
               if (first) {
                 first = false;
-                return (
-                  <InventoryItem
-                    key={product.id}
-                    product={product}
-                    first={true}
-                    onPress={() => this.handleItemClick()}
-                  />
-                );
+                return <DiscountItem key={discount.id} product={product[0]} discount={discount} first={true} />;
               } else {
-                return (
-                  <InventoryItem
-                    key={product.id}
-                    product={product}
-                    first={false}
-                    onPress={() => this.handleItemClick()}
-                  />
-                );
+                return <DiscountItem key={discount.id} product={product[0]} discount={discount} first={false} />;
               }
             })
           ) : (
             <>
               <ActivityIndicator color={Colors.blue} style={styles.loader} size="large" />
-              <Text style={styles.loaderText}>Laden van producten...</Text>
+              <Text style={styles.loaderText}>Laden van afgeprijsde producten...</Text>
             </>
           )}
         </Container>
-        <Modal isVisible={modalShowing} width={width - 80} height={500} onBackdropPress={() => this.closeModal()}>
-          <ModalContent
-            onClose={() => this.closeModal()}
-            state={this.state}
-            onChangeText={(property, value) => this.setState({ [property]: value })}
-            onSubmit={() => this.saveProductToFirebase()}
-          />
-        </Modal>
         <TouchableOpacity
           activeOpacity={barcodeLoading ? 1 : 0.5}
           onPress={() => {
