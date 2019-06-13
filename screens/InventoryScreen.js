@@ -38,6 +38,11 @@ export default class HomeScreen extends Component {
       });
   }
 
+  handleInventoryPress = product => {
+    console.log("Click!", product);
+    this.setState({ modalShowing: true, product });
+  };
+
   render() {
     const { navigation } = this.props;
     const { barcodeLoading, products, loaded } = this.state;
@@ -57,9 +62,23 @@ export default class HomeScreen extends Component {
             products.map(product => {
               if (first) {
                 first = false;
-                return <InventoryItem key={product.id} product={product} first={true} />;
+                return (
+                  <InventoryItem
+                    key={product.id}
+                    product={product}
+                    first={true}
+                    onPress={() => this.handleInventoryPress(product)}
+                  />
+                );
               } else {
-                return <InventoryItem key={product.id} product={product} first={false} />;
+                return (
+                  <InventoryItem
+                    key={product.id}
+                    product={product}
+                    first={false}
+                    onPress={() => this.handleInventoryPress(product)}
+                  />
+                );
               }
             })
           ) : (
