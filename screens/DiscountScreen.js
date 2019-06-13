@@ -21,7 +21,8 @@ export default class HomeScreen extends Component {
     this.state = {
       barcodeLoading: false,
       products: [],
-      discounts: []
+      discounts: [],
+      loaded: false
     };
   }
 
@@ -45,13 +46,13 @@ export default class HomeScreen extends Component {
         querySnapshot.forEach(doc => {
           discounts.push({ id: doc.id, ...doc.data() });
         });
-        this.setState({ discounts });
+        this.setState({ discounts, loaded: true });
       });
   }
 
   render() {
     const { navigation } = this.props;
-    const { barcodeLoading, products, discounts } = this.state;
+    const { barcodeLoading, products, discounts, loaded } = this.state;
     let first = true;
 
     return (
@@ -65,11 +66,7 @@ export default class HomeScreen extends Component {
           </Text>
         </Container>
         <Container type="ScrollView" addStyles={styles.container}>
-          {/* <DiscountItem
-            product={{ id: 123, brand: "AH", name: "Water", description: "Best water you will ever get" }}
-            first={true}
-          /> */}
-          {discounts !== [] ? (
+          {loaded ? (
             discounts.map(discount => {
               const product = products.filter(product => product.id === discount.product);
               if (first) {

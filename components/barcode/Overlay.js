@@ -28,7 +28,7 @@ export default class Overlay extends Component {
             onPress={() => onPress()}
             style={[styles.button, { width: width / 4, height: height / 20 }]}
           >
-            <Text style={styles.buttonText}>Scan again</Text>
+            <Text style={styles.buttonText}>Opnieuw scannen</Text>
           </TouchableOpacity>
         )}
         {loading && <ActivityIndicator size="large" color="#FFFFFF" />}

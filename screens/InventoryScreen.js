@@ -20,7 +20,8 @@ export default class HomeScreen extends Component {
 
     this.state = {
       barcodeLoading: false,
-      products: []
+      products: [],
+      loaded: false
     };
   }
 
@@ -33,13 +34,13 @@ export default class HomeScreen extends Component {
         querySnapshot.forEach(doc => {
           products.push({ id: doc.id, ...doc.data() });
         });
-        this.setState({ products });
+        this.setState({ products, loaded: true });
       });
   }
 
   render() {
     const { navigation } = this.props;
-    const { barcodeLoading, products } = this.state;
+    const { barcodeLoading, products, loaded } = this.state;
     let first = true;
 
     return (
@@ -52,7 +53,7 @@ export default class HomeScreen extends Component {
           </Text>
         </Container>
         <Container type="ScrollView" addStyles={styles.container}>
-          {products !== [] ? (
+          {loaded ? (
             products.map(product => {
               if (first) {
                 first = false;
