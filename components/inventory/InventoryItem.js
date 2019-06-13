@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Text, Image, StyleSheet, View, Dimensions } from "react-native";
+import { TouchableOpacity, Text, Image, StyleSheet, View, Dimensions } from "react-native";
 import PropTypes from "prop-types";
 
 import Colors from "../../constants/Colors";
@@ -8,15 +8,20 @@ import ProductSans from "../../constants/fonts/ProductSans";
 export default class InventoryItem extends Component {
   static propTypes = {
     product: PropTypes.object.isRequired,
-    first: PropTypes.bool
+    first: PropTypes.bool,
+    onPress: PropTypes.function
   };
 
   render() {
-    const { product, first } = this.props;
+    const { product, first, onPress } = this.props;
     const { width } = Dimensions.get("window");
 
     return (
-      <View key={product.id} style={[styles.item, first && { borderTopWidth: 0 }, { width }]}>
+      <TouchableOpacity
+        key={product.id}
+        style={[styles.item, first && { borderTopWidth: 0 }, { width }]}
+        onPress={() => onPress()}
+      >
         <Image
           style={styles.image}
           source={require("../../assets/images/undraw/deliveries.png")}
@@ -29,7 +34,7 @@ export default class InventoryItem extends Component {
           </Text>
           <Text style={styles.description}>{product.description}</Text>
         </View>
-      </View>
+      </TouchableOpacity>
     );
   }
 }

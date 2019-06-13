@@ -1,9 +1,11 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, TouchableOpacity, ActivityIndicator } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, Dimensions, ActivityIndicator, Alert } from "react-native";
 import PropTypes from "prop-types";
 import * as firebase from "firebase";
 
-import { Header, Container } from "../components/common";
+import { Header, Container, Modal } from "../components/common";
+import { Modal as ModalContent } from "../components/barcode";
+
 import { InventoryItem } from "../components/inventory";
 import { MaterialIcons } from "@expo/vector-icons";
 
@@ -20,7 +22,19 @@ export default class HomeScreen extends Component {
 
     this.state = {
       barcodeLoading: false,
-      products: []
+      products: [],
+      scanned: false,
+      loading: false,
+      modalShowing: false,
+      type: 0,
+      barcode: "",
+      name: "",
+      brand: "",
+      description: "",
+      regularPrice: 0,
+      discountedPrice: 0,
+      discountPercentageOff: 0,
+      modalLoading: false
     };
   }
 
@@ -37,9 +51,35 @@ export default class HomeScreen extends Component {
       });
   }
 
+  closeModal = () => {
+    Alert.alert(
+      "Weet je zeker dat je wilt afbreken?",
+      "De informatie zal niet worden opgeslagen.",
+      [
+        {
+          text: "Blijf",
+          style: "default"
+        },
+        {
+          text: "Breek af",
+          onPress: () => {
+            this.setState({ modalShowing: false });
+          },
+          style: "destructive"
+        }
+      ],
+      { cancelable: false }
+    );
+  };
+
+  handleItemClick = () => {
+    this.setState({ modalShowing: true });
+  };
+
   render() {
     const { navigation } = this.props;
-    const { barcodeLoading, products } = this.state;
+    const { barcodeLoading, products, modalShowing } = this.state;
+    const { width, height } = Dimensions.get("window");
     let first = true;
 
     return (
@@ -56,9 +96,23 @@ export default class HomeScreen extends Component {
             products.map(product => {
               if (first) {
                 first = false;
-                return <InventoryItem key={product.id} product={product} first={true} />;
+                return (
+                  <InventoryItem
+                    key={product.id}
+                    product={product}
+                    first={true}
+                    onPress={() => this.handleItemClick()}
+                  />
+                );
               } else {
-                return <InventoryItem key={product.id} product={product} first={false} />;
+                return (
+                  <InventoryItem
+                    key={product.id}
+                    product={product}
+                    first={false}
+                    onPress={() => this.handleItemClick()}
+                  />
+                );
               }
             })
           ) : (
@@ -68,6 +122,14 @@ export default class HomeScreen extends Component {
             </>
           )}
         </Container>
+        <Modal isVisible={modalShowing} width={width - 80} height={500} onBackdropPress={() => this.closeModal()}>
+          <ModalContent
+            onClose={() => this.closeModal()}
+            state={this.state}
+            onChangeText={(property, value) => this.setState({ [property]: value })}
+            onSubmit={() => this.saveProductToFirebase()}
+          />
+        </Modal>
         <TouchableOpacity
           activeOpacity={barcodeLoading ? 1 : 0.5}
           onPress={() => {
