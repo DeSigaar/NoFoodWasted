@@ -1,4 +1,4 @@
-import InventoryItem from "./InventoryItem";
-import InventoryModal from "./InventoryModal";
+import Item from "./Item";
+import Modal from "./Modal";
 
-export { InventoryItem, InventoryModal };
+export { Item, Modal };

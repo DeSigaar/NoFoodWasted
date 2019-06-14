@@ -1,10 +1,11 @@
+/* eslint-disable no-console */
 import React, { Component } from "react";
 import { StyleSheet, Text, TouchableOpacity, ActivityIndicator, Alert, ToastAndroid, Platform } from "react-native";
 import PropTypes from "prop-types";
 import * as firebase from "firebase";
 
 import { Header, Container } from "../components/common";
-import { DiscountItem } from "../components/Discount";
+import { Item } from "../components/discount";
 import { MaterialIcons } from "@expo/vector-icons";
 
 import ProductSans from "../constants/fonts/ProductSans";
@@ -65,7 +66,6 @@ export default class HomeScreen extends Component {
           text: "Afprijzing verwijderen",
           onPress: () => {
             // Remove discount
-            console.log(id);
             firebase
               .firestore()
               .collection("discounts")
@@ -111,7 +111,7 @@ export default class HomeScreen extends Component {
               if (first) {
                 first = false;
                 return (
-                  <DiscountItem
+                  <Item
                     key={discount.id}
                     product={product[0]}
                     discount={discount}
@@ -121,7 +121,7 @@ export default class HomeScreen extends Component {
                 );
               } else {
                 return (
-                  <DiscountItem
+                  <Item
                     key={discount.id}
                     product={product[0]}
                     discount={discount}

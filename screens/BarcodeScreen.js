@@ -267,7 +267,10 @@ export default class BarcodeScreen extends Component {
             .collection("discounts")
             .add({
               amount,
-              product: id
+              product: id,
+              regular_price,
+              discounted_price,
+              discount_percentage_off
             })
             .then(() => {
               if (Platform.OS === "android") {

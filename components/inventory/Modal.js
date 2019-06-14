@@ -7,12 +7,13 @@ import { TextInputWithHeader } from "../barcode";
 import ProductSans from "../../constants/fonts/ProductSans";
 import Colors from "../../constants/Colors";
 
-export default class InventoryModal extends Component {
+export default class Modal extends Component {
   static propTypes = {
     onClose: PropTypes.func.isRequired,
     state: PropTypes.object.isRequired,
     onChangeText: PropTypes.func.isRequired,
-    onSubmit: PropTypes.func.isRequired
+    onSubmit: PropTypes.func.isRequired,
+    onDelete: PropTypes.func.isRequired
   };
 
   calculateDiscount = discount_percentage_off => {
@@ -47,10 +48,10 @@ export default class InventoryModal extends Component {
   };
 
   render() {
-    const { onClose, state, onChangeText, onSubmit } = this.props;
+    const { onClose, state, onChangeText, onSubmit, onDelete } = this.props;
     const {
-      modalShowing,
       modalLoading,
+      deleteLoading,
       type,
       barcode,
       name,
@@ -140,20 +141,29 @@ export default class InventoryModal extends Component {
             <TextInput style={styles.textInput} value={discounted_price.toString()} editable={false} />
           </View>
         </View>
-        <TouchableOpacity
-          activeOpacity={0.5}
-          onPress={() => {
-            onChangeText("modalLoading", true);
-            onSubmit();
-          }}
-          style={styles.submitButton}
-        >
-          {modalLoading ? (
-            <ActivityIndicator color="#FFFFFF" />
-          ) : (
-            <Text style={styles.submitText}>Product aanpassen</Text>
-          )}
-        </TouchableOpacity>
+        <View style={styles.bottom}>
+          <TouchableOpacity activeOpacity={0.5} onPress={() => onDelete(state)} style={styles.deleteButton}>
+            {deleteLoading ? (
+              <ActivityIndicator color={Colors.black} />
+            ) : (
+              <MaterialIcons name="delete" style={styles.deleteIcon} />
+            )}
+          </TouchableOpacity>
+          <TouchableOpacity
+            activeOpacity={0.5}
+            onPress={() => {
+              onChangeText("modalLoading", true);
+              onSubmit();
+            }}
+            style={styles.submitButton}
+          >
+            {modalLoading ? (
+              <ActivityIndicator color={Colors.white} />
+            ) : (
+              <Text style={styles.submitText}>Product aanpassen</Text>
+            )}
+          </TouchableOpacity>
+        </View>
       </>
     );
   }
@@ -237,6 +247,24 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 10,
     backgroundColor: "black"
+  },
+  bottom: {
+    flexDirection: "row",
+    justifyContent: "space-between"
+  },
+  deleteButton: {
+    marginTop: 16,
+    height: 32,
+    width: 32,
+    borderColor: Colors.red,
+    borderRadius: 8,
+    borderWidth: 1.5,
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  deleteIcon: {
+    color: Colors.black,
+    fontSize: 18
   },
   submitButton: {
     marginTop: 16,

@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import Colors from "../../constants/Colors";
 import ProductSans from "../../constants/fonts/ProductSans";
 
-export default class InventoryItem extends Component {
+export default class Item extends Component {
   static propTypes = {
     product: PropTypes.object.isRequired,
     first: PropTypes.bool,

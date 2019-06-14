@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+/* eslint-disable camelcase */
 import React, { Component } from "react";
 import {
   StyleSheet,
@@ -13,7 +15,7 @@ import PropTypes from "prop-types";
 import * as firebase from "firebase";
 
 import { Header, Container, Modal } from "../components/common";
-import { InventoryItem, InventoryModal } from "../components/inventory";
+import { Item, Modal as ModalContent } from "../components/inventory";
 import { MaterialIcons } from "@expo/vector-icons";
 
 import ProductSans from "../constants/fonts/ProductSans";
@@ -32,7 +34,8 @@ export default class InventoryScreen extends Component {
       products: [],
       loaded: false,
       modalShowing: false,
-      modalLoading: false
+      modalLoading: false,
+      deleteLoading: false
     };
   }
 
@@ -102,15 +105,58 @@ export default class InventoryScreen extends Component {
       })
       .then(() => {
         if (Platform.OS === "android") {
-          ToastAndroid.show(`${name} aangepast`, ToastAndroid.LONG);
+          ToastAndroid.show(`${name} aangepast!`, ToastAndroid.LONG);
         } else {
-          Alert.alert(`${name} aangepast`);
+          Alert.alert(`${name} aangepast!`);
         }
         this.setState({ modalLoading: false, modalShowing: false });
       })
       .catch(error => {
         console.log(error);
       });
+  };
+
+  handleDelete = product => {
+    this.setState({ deleteLoading: true });
+    const { id, brand, name } = product;
+
+    Alert.alert(
+      `${brand} ${name}`,
+      "Weet je zeker dat je deze wilt verwijderen?",
+      [
+        {
+          text: "Annuleren",
+          onPress: () => {
+            this.setState({ deleteLoading: false });
+          },
+          style: "cancel"
+        },
+        {
+          text: "Verwijderen",
+          onPress: () => {
+            // Show user a preview of the product before adding
+            firebase
+              .firestore()
+              .collection("products")
+              .doc(id)
+              .delete()
+              .then(() => {
+                if (Platform.OS === "android") {
+                  ToastAndroid.show(`${name} verwijderd!`, ToastAndroid.LONG);
+                } else {
+                  Alert.alert(`${name} verwijderd!`);
+                }
+                this.setState({ modalLoading: false, modalShowing: false, deleteLoading: false });
+              })
+              .catch(error => {
+                console.log(error);
+              });
+          },
+          style: "default"
+        }
+      ],
+      { cancelable: false }
+    );
   };
 
   render() {
@@ -124,7 +170,7 @@ export default class InventoryScreen extends Component {
       if (this.state.name.length + this.state.brand.length >= 15) {
         height = 525;
       }
-      if (this.state.name.length + this.state.brand.length >= 35) {
+      if (this.state.name.length + this.state.brand.length >= 30) {
         height = 550;
       }
     }
@@ -144,7 +190,7 @@ export default class InventoryScreen extends Component {
               if (first) {
                 first = false;
                 return (
-                  <InventoryItem
+                  <Item
                     key={product.id}
                     product={product}
                     first={true}
@@ -153,7 +199,7 @@ export default class InventoryScreen extends Component {
                 );
               } else {
                 return (
-                  <InventoryItem
+                  <Item
                     key={product.id}
                     product={product}
                     first={false}
@@ -170,10 +216,11 @@ export default class InventoryScreen extends Component {
           )}
         </Container>
         <Modal isVisible={modalShowing} width={width - 80} height={height} onBackdropPress={() => this.closeModal()}>
-          <InventoryModal
+          <ModalContent
             onClose={() => this.closeModal()}
             state={this.state}
             onChangeText={(property, value) => this.setState({ [property]: value })}
+            onDelete={product => this.handleDelete(product)}
             onSubmit={() => this.onSubmit()}
           />
         </Modal>

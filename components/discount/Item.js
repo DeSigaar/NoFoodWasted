@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import Colors from "../../constants/Colors";
 import ProductSans from "../../constants/fonts/ProductSans";
 
-export default class DiscountItem extends Component {
+export default class Item extends Component {
   static propTypes = {
     product: PropTypes.object.isRequired,
     discount: PropTypes.object.isRequired,
@@ -32,9 +32,9 @@ export default class DiscountItem extends Component {
                 {product.brand} {product.name}
               </Text>
               <View style={styles.discount}>
-                <Text style={styles.beforePrice}>€{product.regular_price.toFixed(2)}</Text>
+                <Text style={styles.beforePrice}>€{discount.regular_price.toFixed(2)}</Text>
                 <Text style={styles.divider}> | </Text>
-                <Text style={styles.afterPrice}>€{product.discounted_price.toFixed(2)}</Text>
+                <Text style={styles.afterPrice}>€{discount.discounted_price.toFixed(2)}</Text>
               </View>
             </View>
             <View style={styles.amountCounter}>
