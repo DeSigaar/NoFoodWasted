@@ -92,9 +92,27 @@ export default class HomeScreen extends Component {
               this.setState({ barcodeLoading: false });
             }, 100);
           }}
-          style={styles.FAB}
+          style={styles.FAB1}
         >
           {barcodeLoading ? <ActivityIndicator color="#FFFFFF" /> : <MaterialIcons style={styles.FABicon} name="add" />}
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          activeOpacity={barcodeLoading ? 1 : 0.5}
+          onPress={() => {
+            this.setState({ barcodeLoading: true });
+            setTimeout(() => {
+              navigation.navigate("Barcode");
+              this.setState({ barcodeLoading: false });
+            }, 100);
+          }}
+          style={styles.FAB2}
+        >
+          {barcodeLoading ? (
+            <ActivityIndicator color="#FFFFFF" />
+          ) : (
+            <MaterialIcons style={styles.FABicon} name="search" />
+          )}
         </TouchableOpacity>
       </>
     );
@@ -119,7 +137,19 @@ const styles = StyleSheet.create({
     color: Colors.blue,
     textAlign: "center"
   },
-  FAB: {
+  FAB1: {
+    position: "absolute",
+    width: 60,
+    height: 60,
+    borderRadius: 60,
+    backgroundColor: Colors.blue,
+    alignItems: "center",
+    justifyContent: "center",
+    right: 100,
+    bottom: 25,
+    elevation: 4
+  },
+  FAB2: {
     position: "absolute",
     width: 60,
     height: 60,
