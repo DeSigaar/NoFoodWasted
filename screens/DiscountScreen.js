@@ -102,7 +102,7 @@ export default class HomeScreen extends Component {
           onPress={() => {
             this.setState({ barcodeLoading: true });
             setTimeout(() => {
-              navigation.navigate("Barcode");
+              navigation.navigate("SearchSuggestions");
               this.setState({ barcodeLoading: false });
             }, 100);
           }}

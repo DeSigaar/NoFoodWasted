@@ -3,5 +3,6 @@ import BarcodeScreen from "./BarcodeScreen";
 import InventoryScreen from "./InventoryScreen";
 import SettingsScreen from "./SettingsScreen";
 import DiscountScreen from "./DiscountScreen";
+import SearchSuggestionsScreen from "./SearchSuggestionsScreen";
 
-export { HomeScreen, BarcodeScreen, DiscountScreen, InventoryScreen, SettingsScreen };
+export { HomeScreen, BarcodeScreen, DiscountScreen, InventoryScreen, SettingsScreen, SearchSuggestionsScreen };

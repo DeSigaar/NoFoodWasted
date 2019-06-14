@@ -5,7 +5,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import TextInputWithHeader from "./TextInputWithHeader";
 import ProductSans from "../../constants/fonts/ProductSans";
 import Colors from "../../constants/Colors";
-import SearchSuggestions from "../common/SearchSuggestions";
+import SearchSuggestions from "../../screens/SearchSuggestionsScreen";
 
 export default class DiscountModal extends Component {
   static propTypes = {

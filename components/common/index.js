@@ -1,5 +1,5 @@
 import Header from "./Header";
-import SearchSuggestions from "./SearchSuggestions";
+import SearchSuggestions from "../../screens/SearchSuggestionsScreen";
 
 import Container from "./Container";
 import Modal from "./Modal";
