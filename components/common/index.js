@@ -1,4 +1,7 @@
 import Header from "./Header";
 import SearchSuggestions from "./SearchSuggestions";
 
-export { Header, SearchSuggestions };
+import Container from "./Container";
+import Modal from "./Modal";
+
+export { Header, Container, Modal, SearchSuggestions };
