@@ -173,7 +173,8 @@ const styles = StyleSheet.create({
     fontFamily: ProductSans.bold,
     fontSize: 24,
     marginTop: -6,
-    marginBottom: 16
+    marginBottom: 16,
+    marginRight: 16
   },
   inputHeader: {
     fontSize: 14,

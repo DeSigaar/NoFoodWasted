@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, StyleSheet, Platform, StatusBar, Dimensions, Alert } from "react-native";
+import { View, StyleSheet, Platform, StatusBar, Dimensions, Alert, ToastAndroid } from "react-native";
 import { BarCodeScanner } from "expo";
 import PropTypes from "prop-types";
 import axios from "axios";
@@ -218,7 +218,11 @@ export default class BarcodeScreen extends Component {
         type
       })
       .then(() => {
-        Alert.alert(`${brand} ${name}  toegevoegd!`, "Het product in je aanbod zetten ging goed!");
+        if (Platform.OS === "android") {
+          ToastAndroid.show(`${brand} ${name}  toegevoegd!`, ToastAndroid.LONG);
+        } else {
+          Alert.alert(`${brand} ${name}  toegevoegd!`, "Het product in je aanbod zetten ging goed!");
+        }
         this.setState({
           loading: false,
           modalShowing: false,
@@ -265,7 +269,11 @@ export default class BarcodeScreen extends Component {
               product: id
             })
             .then(() => {
-              Alert.alert(`${brand} ${name} afgeprijsd!`, "Het product is afgeprijsd!");
+              if (Platform.OS === "android") {
+                ToastAndroid.show(`${brand} ${name} afgeprijsd!`, "Het product is afgeprijsd!", ToastAndroid.LONG);
+              } else {
+                Alert.alert(`${brand} ${name} afgeprijsd!`, "Het product is afgeprijsd!");
+              }
               this.setState({
                 loading: false,
                 modalShowing: false,
