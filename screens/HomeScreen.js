@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import PropTypes from "prop-types";
 
-import { Header } from "../components/common";
+import { Header, SearchSuggestions } from "../components/common";
 
 import ProductSans from "../constants/fonts/ProductSans";
 import Colors from "../constants/Colors";
@@ -25,6 +25,7 @@ export default class HomeScreen extends Component {
           <TouchableOpacity activeOpacity={0.5} onPress={() => navigation.navigate("Vision")} style={styles.button}>
             <Text style={styles.buttonText}>Vision</Text>
           </TouchableOpacity>
+          <SearchSuggestions />
         </View>
       </>
     );
