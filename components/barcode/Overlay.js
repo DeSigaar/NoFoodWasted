@@ -26,7 +26,7 @@ export default class Overlay extends Component {
           <TouchableOpacity
             activeOpacity={0.5}
             onPress={() => onPress()}
-            style={[styles.button, { width: width / 4, height: height / 20 }]}
+            style={[styles.button, { width: width / 3, height: height / 20 }]}
           >
             <Text style={styles.buttonText}>Opnieuw scannen</Text>
           </TouchableOpacity>

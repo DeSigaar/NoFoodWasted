@@ -1,16 +1,25 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, TouchableOpacity, ActivityIndicator } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  ActivityIndicator,
+  Dimensions,
+  Alert,
+  ToastAndroid,
+  Platform
+} from "react-native";
 import PropTypes from "prop-types";
 import * as firebase from "firebase";
 
-import { Header, Container } from "../components/common";
-import { InventoryItem } from "../components/inventory";
+import { Header, Container, Modal } from "../components/common";
+import { InventoryItem, InventoryModal } from "../components/inventory";
 import { MaterialIcons } from "@expo/vector-icons";
 
 import ProductSans from "../constants/fonts/ProductSans";
 import Colors from "../constants/Colors";
 
-export default class HomeScreen extends Component {
+export default class InventoryScreen extends Component {
   static propTypes = {
     navigation: PropTypes.object.isRequired
   };
@@ -21,7 +30,9 @@ export default class HomeScreen extends Component {
     this.state = {
       barcodeLoading: false,
       products: [],
-      loaded: false
+      loaded: false,
+      modalShowing: false,
+      modalLoading: false
     };
   }
 
@@ -39,14 +50,76 @@ export default class HomeScreen extends Component {
   }
 
   handleInventoryPress = product => {
-    console.log("Click!", product);
-    this.setState({ modalShowing: true, product });
+    this.setState({ modalShowing: true, ...product });
+  };
+
+  closeModal = () => {
+    Alert.alert(
+      "Weet je zeker dat je wilt afbreken?",
+      "Alle informatie zal verloren gaan.",
+      [
+        {
+          text: "Blijf",
+          style: "default"
+        },
+        {
+          text: "Breek af",
+          onPress: () => {
+            this.setState({ loading: false, modalShowing: false, modalLoading: false });
+          },
+          style: "destructive"
+        }
+      ],
+      { cancelable: false }
+    );
+  };
+
+  onSubmit = () => {
+    const {
+      id,
+      type,
+      barcode,
+      name,
+      brand,
+      description,
+      regular_price,
+      discounted_price,
+      discount_percentage_off
+    } = this.state;
+    firebase
+      .firestore()
+      .collection("products")
+      .doc(id)
+      .update({
+        type,
+        barcode,
+        name,
+        brand,
+        description,
+        regular_price: Number(regular_price),
+        discounted_price: Number(discounted_price),
+        discount_percentage_off: Number(discount_percentage_off)
+      })
+      .then(() => {
+        if (Platform.OS === "android") {
+          ToastAndroid.show(`${name} aangepast`, ToastAndroid.LONG);
+        } else {
+          Alert.alert(`${name} aangepast`);
+        }
+        this.setState({ modalLoading: false, modalShowing: false });
+      })
+      .catch(error => {
+        console.log(error);
+      });
   };
 
   render() {
     const { navigation } = this.props;
-    const { barcodeLoading, products, loaded } = this.state;
+    const { barcodeLoading, products, loaded, modalShowing } = this.state;
+    const { width } = Dimensions.get("window");
     let first = true;
+
+    // write logic for height of modal depending on text length
 
     return (
       <>
@@ -88,6 +161,14 @@ export default class HomeScreen extends Component {
             </>
           )}
         </Container>
+        <Modal isVisible={modalShowing} width={width - 80} height={550} onBackdropPress={() => this.closeModal()}>
+          <InventoryModal
+            onClose={() => this.closeModal()}
+            state={this.state}
+            onChangeText={(property, value) => this.setState({ [property]: value })}
+            onSubmit={() => this.onSubmit()}
+          />
+        </Modal>
         <TouchableOpacity
           activeOpacity={barcodeLoading ? 1 : 0.5}
           onPress={() => {
