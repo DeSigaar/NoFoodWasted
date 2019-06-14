@@ -117,9 +117,17 @@ export default class InventoryScreen extends Component {
     const { navigation } = this.props;
     const { barcodeLoading, products, loaded, modalShowing } = this.state;
     const { width } = Dimensions.get("window");
+    let height = 500;
     let first = true;
 
-    // write logic for height of modal depending on text length
+    if (this.state.brand && this.state.name) {
+      if (this.state.name.length + this.state.brand.length >= 15) {
+        height = 525;
+      }
+      if (this.state.name.length + this.state.brand.length >= 35) {
+        height = 550;
+      }
+    }
 
     return (
       <>
@@ -161,7 +169,7 @@ export default class InventoryScreen extends Component {
             </>
           )}
         </Container>
-        <Modal isVisible={modalShowing} width={width - 80} height={550} onBackdropPress={() => this.closeModal()}>
+        <Modal isVisible={modalShowing} width={width - 80} height={height} onBackdropPress={() => this.closeModal()}>
           <InventoryModal
             onClose={() => this.closeModal()}
             state={this.state}
