@@ -244,11 +244,12 @@ export default class BarcodeScreen extends Component {
   };
 
   discountProductToFirebase = () => {
-    const { id, brand, name, regularPrice, discountedPrice, discountPercentageOff, amount } = this.state;
+    const { id, brand, name, regularPrice, discountedPrice, discountPercentageOff } = this.state;
 
     let regular_price = Number(regularPrice);
     let discounted_price = Number(discountedPrice);
     let discount_percentage_off = Number(discountPercentageOff);
+    let amount = Number(this.state.amount);
 
     firebase
       .firestore()
@@ -265,12 +266,12 @@ export default class BarcodeScreen extends Component {
             .firestore()
             .collection("discounts")
             .add({
-              amount: Number(amount),
+              amount,
               product: id
             })
             .then(() => {
               if (Platform.OS === "android") {
-                ToastAndroid.show(`${brand} ${name} afgeprijsd!`, "Het product is afgeprijsd!", ToastAndroid.LONG);
+                ToastAndroid.show(`${brand} ${name} afgeprijsd!`, ToastAndroid.LONG);
               } else {
                 Alert.alert(`${brand} ${name} afgeprijsd!`, "Het product is afgeprijsd!");
               }
