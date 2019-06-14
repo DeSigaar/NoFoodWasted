@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, TouchableOpacity, ActivityIndicator } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, ActivityIndicator, Alert, ToastAndroid, Platform } from "react-native";
 import PropTypes from "prop-types";
 import * as firebase from "firebase";
 
@@ -50,6 +50,45 @@ export default class HomeScreen extends Component {
       });
   }
 
+  onPress = (product, discount) => {
+    const { brand, name, amount } = product;
+    const { id } = discount;
+    Alert.alert(
+      "Verwijder afprijzing?",
+      `Afprijzing van ${brand} ${name} met aantal ${amount} verwijderen?`,
+      [
+        {
+          text: "Annuleren",
+          style: "cancel"
+        },
+        {
+          text: "Afprijzing verwijderen",
+          onPress: () => {
+            // Remove discount
+            console.log(id);
+            firebase
+              .firestore()
+              .collection("discounts")
+              .doc(id)
+              .delete()
+              .then(() => {
+                if (Platform.OS === "android") {
+                  ToastAndroid.show(`${brand} ${name} verwijderd!`, ToastAndroid.LONG);
+                } else {
+                  Alert.alert(`${brand} ${name} verwijderd!`, "De afprijzing is verwijderd!");
+                }
+              })
+              .catch(error => {
+                console.log(error);
+              });
+          },
+          style: "default"
+        }
+      ],
+      { cancelable: false }
+    );
+  };
+
   render() {
     const { navigation } = this.props;
     const { barcodeLoading, products, discounts, loaded } = this.state;
@@ -71,9 +110,25 @@ export default class HomeScreen extends Component {
               const product = products.filter(product => product.id === discount.product);
               if (first) {
                 first = false;
-                return <DiscountItem key={discount.id} product={product[0]} discount={discount} first={true} />;
+                return (
+                  <DiscountItem
+                    key={discount.id}
+                    product={product[0]}
+                    discount={discount}
+                    first={true}
+                    onPress={(product, discount) => this.onPress(product, discount)}
+                  />
+                );
               } else {
-                return <DiscountItem key={discount.id} product={product[0]} discount={discount} first={false} />;
+                return (
+                  <DiscountItem
+                    key={discount.id}
+                    product={product[0]}
+                    discount={discount}
+                    first={false}
+                    onPress={(product, discount) => this.onPress(product, discount)}
+                  />
+                );
               }
             })
           ) : (
