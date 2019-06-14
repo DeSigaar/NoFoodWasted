@@ -30,8 +30,39 @@ class SearchSuggestions extends Component {
     };
   }
 
+  componentDidMount() {
+    firebase
+      .firestore()
+      .collection("products")
+      .onSnapshot(querySnapshot => {
+        let products = [];
+        querySnapshot.forEach(doc => {
+          products.push({ id: doc.id, ...doc.data() });
+        });
+        this.setState({ products });
+      });
+
+    firebase
+      .firestore()
+      .collection("discounts")
+      .onSnapshot(querySnapshot => {
+        let discounts = [];
+        querySnapshot.forEach(doc => {
+          discounts.push({ id: doc.id, ...doc.data() });
+        });
+        this.setState({ discounts, loaded: true });
+      });
+  }
+
+  handleClick = data => {
+    if (data != null) {
+      console.log(data.name);
+    }
+  };
+
   render() {
-    const { data } = this.state;
+    const { data, discounts, products } = this.state;
+    //TODO dingen met discounts en products.
     return (
       <View style={styles.inputAutoSuggestBox}>
         <InputAutoSuggest

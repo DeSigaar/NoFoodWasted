@@ -16,51 +16,6 @@ export default class Modal extends Component {
     onSubmit: PropTypes.func.isRequired
   };
 
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      data: [
-        { someAttribute: "val1", details: { id: "1", name: "Ijsbergsla", category: "Groenten" } },
-        {
-          someAttribute: "val2",
-          details: { id: "2", name: "Pannenkoeken", category: "Zuivel" }
-        },
-        { someAttribute: "val3", details: { id: "3", name: "Paprika", category: "Groenten" } },
-        { someAttribute: "val4", details: { id: "4", name: "Pindakaas", category: "Beleg" } },
-        {
-          someAttribute: "val5",
-          details: { id: "5", name: "Kipfilet", category: "Kip" }
-        },
-        { someAttribute: "val6", details: { id: "6", name: "Rundergehakt", category: "Vlees" } }
-      ]
-    };
-  }
-
-  componentDidMount() {
-    firebase
-      .firestore()
-      .collection("products")
-      .onSnapshot(querySnapshot => {
-        let products = [];
-        querySnapshot.forEach(doc => {
-          products.push({ id: doc.id, ...doc.data() });
-        });
-        this.setState({ products });
-      });
-
-    firebase
-      .firestore()
-      .collection("discounts")
-      .onSnapshot(querySnapshot => {
-        let discounts = [];
-        querySnapshot.forEach(doc => {
-          discounts.push({ id: doc.id, ...doc.data() });
-        });
-        this.setState({ discounts, loaded: true });
-      });
-  }
-
   calculateDiscount = discountPercentageOff => {
     const { onChangeText } = this.props;
     let { discountedPrice, regularPrice } = this.props.state;
@@ -92,12 +47,6 @@ export default class Modal extends Component {
     this.calculateDiscount(discountPercentageOff.toFixed(0));
   };
 
-  handleClick = data => {
-    if (data != null) {
-      console.log(data.name);
-    }
-  };
-
   render() {
     const { onClose, state, onChangeText, onSubmit } = this.props;
     const {
@@ -109,17 +58,8 @@ export default class Modal extends Component {
       regularPrice,
       discountedPrice,
       discountPercentageOff,
-      modalLoading,
-      discounts,
-      products
+      modalLoading
     } = state;
-
-    <InputAutoSuggest
-      style={{ flex: 1 }}
-      staticData={data}
-      itemFormat={{ id: "details.id", name: "details.name" }}
-      onDataSelectedChange={data => this.handleClick(data)}
-    />;
 
     return (
       <>
