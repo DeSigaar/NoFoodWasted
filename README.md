@@ -21,10 +21,12 @@ A live preview can be found on our [Expo page](https://expo.io/@maxaltena/NoFood
 ##  Prerequisites
 
 - [Node.js](https://nodejs.org/)
+- [Expo Client](https://expo.io/tools#client) on smartphone or emulator
+- [Yarn](https://yarnpkg.com/) (optional)
 
 ## Installation
 
-Make sure you have Node.js installed. If you are unsure if node is installed, run `$ node -v` within terminal/command prompt.
+First make sure you have Node.js installed. If you are unsure if node is installed, run `$ node --version` within terminal/command prompt. Afterwards check if you have Yarn installed. You can do this by running `$ yarn --version` within terminal/command prompt.
 
 ### Clone
 
@@ -37,27 +39,35 @@ $ cd NoFoodWasted
 
 ### Setup
 
-First, globally install the latest expo-cli (this may need to be done as administrator / sudo'd)
+First, globally install the latest expo-cli package
+
 ```
-$ npm i -g expo-cli@latest
+$ npm install --global expo-cli@latest
+or
+$ yarn global add expo-cli@latest
 ```
 
-Next up, install all needed dependencies
+Next up, install all needed dependencies within the folder
+
 ```
-$ npm i
-````
+$ npm install
+or
+$ yarn install
+```
 
 ### Running
 
 Finally, you can start running the application
+
 ```
 $ npm start
+or
+$ yarn start
 ```
 
 ## Built with
 
 - [Expo](https://expo.io/)
-- [Node.js](https://nodejs.org/)
 - [React](https://reactjs.org/)
 - [React Native](https://facebook.github.io/react-native/)
 

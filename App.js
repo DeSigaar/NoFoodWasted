@@ -36,7 +36,12 @@ export default class App extends Component {
 
     const imageAssets = cacheImages([
       require("./assets/images/icon/icon.png"),
-      require("./assets/images/icon/splash.png")
+      require("./assets/images/icon/splash.png"),
+      require("./assets/images/loading.gif"),
+      require("./assets/images/undraw/deliveries.png"),
+      require("./assets/images/home/discount.png"),
+      require("./assets/images/home/order.png"),
+      require("./assets/images/home/storage.png")
     ]);
 
     const fontAssets = cacheFonts([
